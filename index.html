@@ -110,6 +110,11 @@ header{position:sticky;top:0;z-index:20;background:#fff;
         padding:9px 14px;display:flex;gap:9px;align-items:baseline}
 .fmt b{font-family:var(--font-mono);font-size:12.5px;color:#a99bff;letter-spacing:.04em}
 .fmt span{font-size:12.5px;color:#8fa3bd}
+.by{margin:26px 0 0;font-size:12.5px;color:#7d93b2;letter-spacing:.02em}
+.by b{color:#c3d0e0;font-weight:600}
+.by span{display:block}   /* ★ 「根拠 / は」で折れていた。二文目は行頭から */
+.by a{color:#a99bff;text-decoration:none;border-bottom:1px solid rgba(169,155,255,.35)}
+.by a:hover{border-bottom-color:#a99bff}
 .hero .shot{margin:56px auto 0;max-width:var(--w);padding:0 28px 72px}
 
 /* ── ヒーローの図: 変換そのもの ──────────────────────────────
@@ -377,6 +382,10 @@ End Sub
       <li><b>.pptx</b><span>差し替える</span></li>
       <li><b>.docx</b><span>書き換える</span></li>
     </ul>
+    <!-- ★ 冒頭にも置く。視覚 QA の節まで読まない人には伝わらないため。
+         ただし主題は道具なので、見出しと競わない静かさで。 -->
+    <p class="by">道具もこのページも <b>AI が書き、AI が描画して確かめました</b>。
+      <span>根拠は<a href="#qa">視覚 QA</a> と<a href="#limits">確認していないこと</a>に書いてあります。</span></p>
   </div>
   <div class="shot">
     <div class="tf">
@@ -589,6 +598,20 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       存在を確認する方法では、これは見つかりません。原因を 3 回続けて読み違え、
       最後は「この描画系はグラフに対応していない」と<b>道具の限界に帰着させました</b>。
       3 回とも外れです。<b>描画して初めて、自分の生成物を疑えました。</b></p>
+
+    <div class="scene" style="max-width:74ch">
+      <p class="q">basrun も、このページも、書いたのは AI です。<br>
+        そして上の欠陥を見つけたのも、描画して見た AI 自身です。</p>
+      <ul>
+        <li><b>AI は画像を読めます。</b>ですが<b>文書を画像にする経路が無ければ、
+          読む対象そのものがありません。</b>ライブラリが返すのは値と書式の
+          <b>指定</b>であって、描画の<b>結果</b>ではないためです</li>
+        <li>そこで <code>soffice</code> で PDF にし、画像にしてから読み返す経路を作りました。
+          この節の 2 枚も、上の月次表も、<b>そうやって一度見てから載せています</b></li>
+        <li>このページ自体も同じ手順で作りました。幅を変えて描画し、
+          <b>見出しの折り返し・図の欠け・地と文字のコントラスト</b>を確かめています</li>
+      </ul>
+    </div>
     <div class="two">
       <div>
         <figure class="mat"><img src="assets/worksheet_c.jpg" alt="basrun が版数を差し替えた作業指示書"></figure>
@@ -667,6 +690,8 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
         <li>実行の前後で、利用者の既定プロファイルがバイト単位で不変であること</li>
         <li>処理後も <code>vbaProject.bin</code> を含まない、通常の <code>.xlsx</code> であること</li>
         <li>結果は生成に使った実装ではなく、<b>別の実装で読み返して</b>確認</li>
+        <li>このページも幅 1280 / 390 / 360 で描画して確認。地と本文のコントラストは
+            <b>画素を読んで測定</b>（最悪 8.2 : 1）、外部への通信は <b>0 件</b></li>
       </ul>
     </div>
   </div>
@@ -694,6 +719,7 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
   <div class="wrap">
     <span><b style="color:#fff">basrun</b> — plain-text Basic runner</span>
     <span>Microsoft Office 不要 / .xlsx .pptx .docx</span>
+    <span>道具もこのページも AI が書き、AI が描画して確かめました</span>
   </div>
 </footer>
 
