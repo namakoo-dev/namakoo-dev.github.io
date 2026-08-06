@@ -41,11 +41,13 @@ html{scroll-behavior:smooth}
 body{margin:0;color:var(--fg);font-family:var(--font-body);
      font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;
      background:var(--bg)}
-/* 方眼。固定して置くので、送っても地が流れず落ち着いている */
+/* 方眼。固定して置くので、送っても地が流れず落ち着いている。
+   ★ 明るい節の面は .5 まで薄めてある。濃いと方眼がそこだけ消え、
+   地が別物になる (実測: 線と紙の差が 1.335 → 1.115 まで落ちていた)。 */
 body::before{content:"";position:fixed;inset:0;z-index:-2;pointer-events:none;
   background-image:
-    linear-gradient(90deg,rgba(6,27,49,.038) 1px,transparent 1px),
-    linear-gradient(180deg,rgba(6,27,49,.038) 1px,transparent 1px);
+    linear-gradient(90deg,rgba(6,27,49,.058) 1px,transparent 1px),
+    linear-gradient(180deg,rgba(6,27,49,.058) 1px,transparent 1px);
   background-size:44px 44px}
 /* 暗いヒーローから明るい本文へ落ちる境目に、ごく薄い accent の光。
    ★ 単色の面が続くのを切るのが目的なので、見えるか見えないかの濃さで置く */
@@ -170,7 +172,7 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 
 /* ── 見出し: 和文 + 細い罫線 + 英語副題 ───────────────────────── */
 .sec{padding:96px 0}
-.sec.alt{background:linear-gradient(180deg,rgba(240,246,252,.72),rgba(236,244,251,.72));
+.sec.alt{background:linear-gradient(180deg,rgba(240,246,252,.5),rgba(236,244,251,.5));
   border-top:1px solid rgba(6,27,49,.05);border-bottom:1px solid rgba(6,27,49,.05)}
 .h2{display:flex;align-items:center;gap:20px;margin:0 0 40px;flex-wrap:wrap}
 .h2 b{font-size:clamp(20px,2.6vw,26px);letter-spacing:.14em;font-weight:700}
@@ -212,10 +214,19 @@ pre{background:var(--fg);color:#dbe6f5;border-radius:var(--radius-lg);
 pre .c{color:#7d93b2}
 pre .k{color:#a99bff}
 
+/* ── 実物の載せ方: 台紙 ──────────────────────────────────────
+ * ★ 地に方眼を敷いたら、白い紙をそのまま置いた 3 枚だけが浮かなくなった
+ *   (額縁が無いので、地と同じ「白い面」に見える)。台紙に載せて影を落とす。
+ *   暗い面に載せる手もあるが、このページは既に暗い塊が 5 つあるので重くなる。
+ * ─────────────────────────────────────────────────────────── */
+.mat{margin:0;background:#fff;padding:10px;border-radius:12px;
+  border:1px solid rgba(6,27,49,.08);line-height:0;
+  box-shadow:0 26px 50px -20px rgba(6,27,49,.30),
+             0 3px 8px -2px rgba(6,27,49,.08)}
+.mat img{width:100%;display:block;border-radius:6px;border:1px solid var(--border)}
+
 /* ── 全面帯: 描画した実物 ────────────────────────────────────── */
 .band{max-width:var(--w);margin:0 auto;padding:0 28px;line-height:0}
-.band img{width:100%;display:block;border:1px solid var(--border);
-  border-radius:var(--radius-lg);box-shadow:var(--shadow-lift)}
 .cap{font-size:12px;color:var(--muted);text-align:center;padding:14px 28px 0;
      letter-spacing:.04em}
 
@@ -244,8 +255,6 @@ pre .k{color:#a99bff}
 
 /* ── 二段組 ──────────────────────────────────────────────────── */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
-.two img{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);
-         box-shadow:var(--shadow-card);display:block}
 
 /* ── 対応表 ──────────────────────────────────────────────────── */
 table{width:100%;border-collapse:collapse;font-size:14px}
@@ -554,7 +563,7 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
   </div>
 </section>
 
-<div class="band"><img src="assets/orders_c.jpg" alt="basrun が粗利率を埋めた月次表とグラフ"></div>
+<div class="band"><figure class="mat"><img src="assets/orders_c.jpg" alt="basrun が粗利率を埋めた月次表とグラフ"></figure></div>
 <p class="cap">別の .xlsx ― 粗利率と % 書式は basrun が入れ、グラフと条件付き書式は生成時に。Excel は使っていない</p>
 
 <section class="sec" id="qa">
@@ -582,11 +591,11 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       3 回とも外れです。<b>描画して初めて、自分の生成物を疑えました。</b></p>
     <div class="two">
       <div>
-        <img src="assets/worksheet_c.jpg" alt="basrun が版数を差し替えた作業指示書">
+        <figure class="mat"><img src="assets/worksheet_c.jpg" alt="basrun が版数を差し替えた作業指示書"></figure>
         <p class="cap" style="text-align:left;padding-left:0">.docx ― 版数の差し替えとロット件数の追記を basrun が実行</p>
       </div>
       <div>
-        <img src="assets/pie_c.jpg" alt="生成した 3-D 円グラフを描画したもの">
+        <figure class="mat"><img src="assets/pie_c.jpg" alt="生成した 3-D 円グラフを描画したもの"></figure>
         <p class="cap" style="text-align:left;padding-left:0">.xlsx ― 3-D グラフとテクスチャ。描画しなければ確認できない領域</p>
       </div>
     </div>
