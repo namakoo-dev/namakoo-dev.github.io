@@ -18,7 +18,7 @@
   --fg:#061b31; --fg-2:#273951; --muted:#64748d;
   --border:#e5edf5;
   --accent:#533afd; --accent-on:#ffffff; --accent-hover:#4434d4;
-  --radius-sm:4px; --radius-md:6px; --radius-lg:8px;
+  --radius-sm:4px; --radius-md:6px; --radius-lg:10px;  /* ★ 面はすべて lg */
   --shadow-card:0 2px 5px -1px rgba(50,50,93,.25), 0 1px 3px -1px rgba(0,0,0,.3);
   --shadow-lift:0 13px 27px -5px rgba(50,50,93,.25), 0 8px 16px -8px rgba(0,0,0,.3);
   --font-body:"Helvetica Neue","Hiragino Kaku Gothic ProN","Noto Sans JP",
@@ -127,7 +127,7 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 /* ★ 中央揃えにしたら、表のほうが背が高いぶんコードだけ下がって
    左右の見出しがずれた (描画して確認)。見出しは上で揃え、矢印だけ中央へ。 */
 .tf{display:grid;grid-template-columns:1fr 148px 1fr;align-items:start;
-  background:#0d2439;border:1px solid #1d3a54;border-radius:12px;
+  background:#0d2439;border:1px solid #1d3a54;border-radius:var(--radius-lg);
   padding:30px 32px;box-shadow:var(--shadow-lift)}
 .tf .tag{display:block;font-family:var(--font-mono);font-size:11px;
   letter-spacing:.12em;color:#7d93b2;margin-bottom:16px}
@@ -212,6 +212,23 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 .scene li:last-child{margin-bottom:0}
 .scene b{color:var(--fg-2)}
 
+/* ── 反復する形: セルの角 ────────────────────────────────────
+ * ★ 節ごとに扱いが違うと「作り込んだ」ではなく「散らかった」に見える
+ *   (HTML5 UP の 6 枚はどれも 1 つの形を最後まで繰り返していた)。
+ * ★ 借りてきた「円形の切り抜き」は合わない ── こちらの図版は全部
+ *   四角い文書だから。**主題から取る = 表計算で選択したセルの角。**
+ *   面が変わっても、同じ大きさ・同じ位置・同じ色で必ず出る。
+ * ─────────────────────────────────────────────────────────── */
+.card,.scene,.mat,.limits,.tf,pre{position:relative}
+.card::before,.scene::before,.mat::before,.limits::before,.tf::before,
+pre::before{
+  content:"";position:absolute;left:6px;top:6px;width:11px;height:11px;
+  border-left:1.5px solid var(--accent);border-top:1.5px solid var(--accent);
+  opacity:.6;pointer-events:none}
+.tf::before,pre::before{border-color:#a99bff;opacity:.6}
+/* ★ ヒーローの図の中のコードは、外側の図が既にしるしを持っている。二重にしない */
+.tf pre::before{display:none}
+
 /* ── コード ──────────────────────────────────────────────────── */
 pre{background:var(--fg);color:#dbe6f5;border-radius:var(--radius-lg);
     padding:22px 24px;overflow-x:auto;font-family:var(--font-mono);
@@ -224,11 +241,11 @@ pre .k{color:#a99bff}
  *   (額縁が無いので、地と同じ「白い面」に見える)。台紙に載せて影を落とす。
  *   暗い面に載せる手もあるが、このページは既に暗い塊が 5 つあるので重くなる。
  * ─────────────────────────────────────────────────────────── */
-.mat{margin:0;background:#fff;padding:10px;border-radius:12px;
+.mat{margin:0;background:#fff;padding:18px;border-radius:var(--radius-lg);
   border:1px solid rgba(6,27,49,.08);line-height:0;
   box-shadow:0 26px 50px -20px rgba(6,27,49,.30),
              0 3px 8px -2px rgba(6,27,49,.08)}
-.mat img{width:100%;display:block;border-radius:6px;border:1px solid var(--border)}
+.mat img{width:100%;display:block;border-radius:5px;border:1px solid var(--border)}
 
 /* ── 全面帯: 描画した実物 ────────────────────────────────────── */
 .band{max-width:var(--w);margin:0 auto;padding:0 28px;line-height:0}
@@ -269,7 +286,7 @@ td code{font-family:var(--font-mono);font-size:12.5px;color:var(--accent)}
 
 /* ── 限界の節: 誠実さを見せる場所なので目立たせる ─────────────── */
 .limits{border:1px solid var(--border);border-left:3px solid var(--accent);
-        border-radius:var(--radius-md);padding:26px 28px;background:var(--surface)}
+        border-radius:var(--radius-lg);padding:26px 28px;background:var(--surface)}
 .limits h3{margin:0 0 14px;font-size:15px;letter-spacing:.06em}
 .limits ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px}
 .limits li{margin-bottom:9px}
@@ -482,7 +499,7 @@ total = total + u * q</pre>
             <path d="M0 0 L10 5 L0 10 Z"/></marker>
         </defs>
 
-        <rect class="box" x="16" y="36" width="252" height="100" rx="8"/>
+        <rect class="box" x="16" y="36" width="252" height="100" rx="10"/>
         <text class="t" x="142" y="72" text-anchor="middle">平文のソース</text>
         <text class="m" x="142" y="95" text-anchor="middle">src/Amount.bas</text>
         <text class="s" x="142" y="118" text-anchor="middle">git diff が読める。真実はここ</text>
@@ -491,7 +508,7 @@ total = total + u * q</pre>
         <text class="lbm" x="310" y="74" text-anchor="middle">apply</text>
         <text class="lb"  x="310" y="106" text-anchor="middle">流し込む</text>
 
-        <rect class="box tmp" x="354" y="36" width="252" height="100" rx="8"/>
+        <rect class="box tmp" x="354" y="36" width="252" height="100" rx="10"/>
         <text class="t" x="480" y="72" text-anchor="middle">Basic ライブラリ</text>
         <text class="m" x="480" y="95" text-anchor="middle">MyLib</text>
         <text class="s" x="480" y="118" text-anchor="middle">実行時だけ。終わればもう無い</text>
@@ -501,7 +518,7 @@ total = total + u * q</pre>
         <path class="ln" d="M614 86 H682" marker-end="url(#a1)"/>
         <text class="lb"  x="648" y="106" text-anchor="middle">文書を処理</text>
 
-        <rect class="box" x="692" y="36" width="252" height="100" rx="8"/>
+        <rect class="box" x="692" y="36" width="252" height="100" rx="10"/>
         <text class="t" x="818" y="72" text-anchor="middle">文書</text>
         <text class="m" x="818" y="95" text-anchor="middle">book.xlsx</text>
         <text class="s" x="818" y="118" text-anchor="middle">ソースは埋め込まれない</text>
@@ -526,7 +543,7 @@ total = total + u * q</pre>
             <path d="M0 0 L10 5 L0 10 Z"/></marker>
         </defs>
 
-        <rect class="box" x="44" y="8" width="282" height="92" rx="8"/>
+        <rect class="box" x="44" y="8" width="282" height="92" rx="10"/>
         <text class="t" x="64" y="40">平文のソース</text>
         <text class="m" x="64" y="64">src/Amount.bas</text>
         <text class="s" x="64" y="86">git diff が読める。真実はここ</text>
@@ -535,7 +552,7 @@ total = total + u * q</pre>
         <text class="lbm" x="201" y="125">apply</text>
         <text class="lb"  x="201" y="143">流し込む</text>
 
-        <rect class="box tmp" x="44" y="170" width="282" height="92" rx="8"/>
+        <rect class="box tmp" x="44" y="170" width="282" height="92" rx="10"/>
         <text class="t" x="64" y="202">Basic ライブラリ</text>
         <text class="m" x="64" y="226">MyLib</text>
         <text class="s" x="64" y="248">実行時だけ。終わればもう無い</text>
@@ -543,7 +560,7 @@ total = total + u * q</pre>
         <path class="ln" d="M185 262 V322" marker-end="url(#b1)"/>
         <text class="lb"  x="201" y="297">文書を処理</text>
 
-        <rect class="box" x="44" y="332" width="282" height="92" rx="8"/>
+        <rect class="box" x="44" y="332" width="282" height="92" rx="10"/>
         <text class="t" x="64" y="364">文書</text>
         <text class="m" x="64" y="388">book.xlsx</text>
         <text class="s" x="64" y="410">ソースは埋め込まれない</text>
