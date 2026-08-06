@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>basrun — マクロを置けない文書を、平文の Basic で動かす</title>
+<meta name="description" content="Microsoft Office を持たずに .xlsx / .pptx / .docx を機械で処理する。ソースは平文のまま git に置き、実行時にライブラリへ流し込む。">
+<style>
+/* ───────────────────────────────────────────────────────────────
+ * 色と立体は Stripe のデザインシステムから (open-design, Apache-2.0)。
+ * 構造とリズムは和文コーポレートサイトの型から借りた:
+ *   和文見出し + 英語副題 / 細い罫線 + 丸い矢印 / 全面帯 / 広い余白
+ * ★ 縦書きと写真は借りない。技術文書では読みにくく、写真は持っていない。
+ *   代わりに「描画した実物」を全面帯に置く。
+ * ─────────────────────────────────────────────────────────────── */
+:root{
+  --bg:#ffffff; --surface:#ffffff; --surface-warm:#f6f9fc;
+  --fg:#061b31; --fg-2:#273951; --muted:#64748d;
+  --border:#e5edf5;
+  --accent:#533afd; --accent-on:#ffffff; --accent-hover:#4434d4;
+  --radius-sm:4px; --radius-md:6px; --radius-lg:8px;
+  --shadow-card:0 2px 5px -1px rgba(50,50,93,.25), 0 1px 3px -1px rgba(0,0,0,.3);
+  --shadow-lift:0 13px 27px -5px rgba(50,50,93,.25), 0 8px 16px -8px rgba(0,0,0,.3);
+  --font-body:"Helvetica Neue","Hiragino Kaku Gothic ProN","Noto Sans JP",
+              "Yu Gothic",system-ui,sans-serif;
+  --font-mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --w:1120px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--font-body);
+     font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:var(--w);margin:0 auto;padding:0 28px}
+
+/* ── ナビ: 細く、右端に一つだけ強い色 ───────────────────────────── */
+/* ★ 半透明にすると、下を通る図版が透けて幽霊のように残る (描画して確認)。
+   ぼかしだけでは隠れないので不透明にする。 */
+header{position:sticky;top:0;z-index:20;background:#fff;
+       border-bottom:1px solid var(--border)}
+.nav{max-width:var(--w);margin:0 auto;display:flex;align-items:center;
+     gap:32px;padding:0 28px;height:64px}
+.brand{font-weight:700;letter-spacing:.06em;font-size:17px;margin-right:auto}
+.brand small{display:block;font-weight:400;font-size:10px;color:var(--muted);
+             letter-spacing:.18em}
+.nav a{text-decoration:none;font-size:13.5px;color:var(--fg-2);letter-spacing:.04em}
+.nav a:hover{color:var(--accent)}
+.nav .cta{background:var(--accent);color:var(--accent-on);padding:9px 18px;
+          border-radius:var(--radius-sm);font-weight:600}
+.nav .cta:hover{background:var(--accent-hover);color:#fff}
+
+/* ── ヒーロー: 濃紺の全面。写真の代わりに実物の描画 ─────────────── */
+.hero{background:var(--fg);color:#fff;padding:104px 0 0}
+.hero h1{font-size:clamp(27px,4.4vw,46px);line-height:1.5;margin:0 0 20px;
+         letter-spacing:.04em;font-weight:700}
+/* ★ 句ごとに inline-block にして、意味の切れ目でだけ折り返させる。
+   <br> を決め打ちすると幅によって変な所で割れる (スマホで実際に割れた)。 */
+.hero h1 span{display:inline-block}
+/* ★ 狭い画面では短い見出しに差し替える。
+   句単位で折り返させても、句そのものが画面幅より長ければ中で割れる。
+   390px 幅に 27px の見出しは 12 文字前後しか入らない ── 物理的に足りない。
+   文言のほうを幅に合わせる。読み手には見えない前提になるので、
+   意味は副題と本文が引き継ぐようにしてある。 */
+.hero h1 .n{display:none}
+.hero .en{font-size:12px;letter-spacing:.24em;color:#8fa3bd;margin:0 0 28px}
+.hero p{max-width:56ch;color:#c3d0e0;margin:0 0 34px;font-size:15px}
+.fmt{list-style:none;display:flex;gap:12px;margin:0 0 8px;padding:0;flex-wrap:wrap}
+.fmt li{border:1px solid #1d3a54;border-radius:var(--radius-sm);
+        padding:9px 14px;display:flex;gap:9px;align-items:baseline}
+.fmt b{font-family:var(--font-mono);font-size:12.5px;color:#a99bff;letter-spacing:.04em}
+.fmt span{font-size:12.5px;color:#8fa3bd}
+.hero .shot{margin:56px auto 0;max-width:var(--w);padding:0 28px 72px;line-height:0}
+.hero .shot figure{margin:0;background:#0d2439;border:1px solid #1d3a54;
+  border-radius:10px;padding:10px;box-shadow:var(--shadow-lift)}
+.hero .shot .bar{display:flex;gap:6px;padding:2px 4px 10px}
+.hero .shot .bar i{width:9px;height:9px;border-radius:50%;background:#2a4falpha;
+  background:#284866;display:block}
+.hero .shot img{width:100%;display:block;border-radius:4px}
+
+/* ── 見出し: 和文 + 細い罫線 + 英語副題 ───────────────────────── */
+.sec{padding:96px 0}
+.sec.alt{background:var(--surface-warm)}
+.h2{display:flex;align-items:center;gap:20px;margin:0 0 40px;flex-wrap:wrap}
+.h2 b{font-size:clamp(20px,2.6vw,26px);letter-spacing:.14em;font-weight:700}
+.h2 .rule{flex:0 0 56px;height:1px;background:var(--border)}
+.h2 .en{font-size:11.5px;letter-spacing:.2em;color:var(--muted);
+        font-family:var(--font-mono)}
+.lead{max-width:62ch;color:var(--fg-2);margin:0 0 34px}
+
+/* ── カード ──────────────────────────────────────────────────── */
+.grid{display:grid;gap:22px;grid-template-columns:repeat(3,1fr)}
+.card{background:var(--surface);border:1px solid var(--border);
+      border-radius:var(--radius-lg);padding:26px 24px;box-shadow:var(--shadow-card)}
+.card h3{margin:0 0 10px;font-size:15.5px;letter-spacing:.04em}
+.card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.85}
+.card .n{display:inline-block;font-family:var(--font-mono);font-size:11px;
+         color:var(--accent);letter-spacing:.14em;margin-bottom:12px}
+
+/* ── コード ──────────────────────────────────────────────────── */
+pre{background:var(--fg);color:#dbe6f5;border-radius:var(--radius-lg);
+    padding:22px 24px;overflow-x:auto;font-family:var(--font-mono);
+    font-size:13px;line-height:1.85;margin:0;box-shadow:var(--shadow-lift)}
+pre .c{color:#7d93b2}
+pre .k{color:#a99bff}
+
+/* ── 全面帯: 描画した実物 ────────────────────────────────────── */
+.band{max-width:var(--w);margin:0 auto;padding:0 28px;line-height:0}
+.band img{width:100%;display:block;border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-lift)}
+.cap{font-size:12px;color:var(--muted);text-align:center;padding:14px 28px 0;
+     letter-spacing:.04em}
+
+/* ── 二段組 ──────────────────────────────────────────────────── */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
+.two img{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);
+         box-shadow:var(--shadow-card);display:block}
+
+/* ── 対応表 ──────────────────────────────────────────────────── */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th,td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--border)}
+th{font-size:12px;letter-spacing:.14em;color:var(--muted);font-weight:600}
+td code{font-family:var(--font-mono);font-size:12.5px;color:var(--accent)}
+
+/* ── 限界の節: 誠実さを見せる場所なので目立たせる ─────────────── */
+.limits{border:1px solid var(--border);border-left:3px solid var(--accent);
+        border-radius:var(--radius-md);padding:26px 28px;background:var(--surface)}
+.limits h3{margin:0 0 14px;font-size:15px;letter-spacing:.06em}
+.limits ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px}
+.limits li{margin-bottom:9px}
+
+/* ── リンク: 細い罫線 + 丸い矢印 ─────────────────────────────── */
+.link{display:flex;align-items:center;gap:16px;text-decoration:none;
+      padding:18px 0;border-top:1px solid var(--border)}
+.link b{font-size:15px;letter-spacing:.04em}
+.link .rule{flex:1;height:1px;background:var(--border)}
+.link .arrow{width:30px;height:30px;border-radius:50%;background:var(--accent);
+             color:#fff;display:grid;place-items:center;font-size:13px;flex:0 0 30px}
+.link:hover .arrow{background:var(--accent-hover)}
+
+footer{background:var(--fg);color:#8fa3bd;padding:52px 0;font-size:12.5px}
+footer .wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
+footer a{color:#c3d0e0}
+
+@media(max-width:820px){
+  .hero h1 .w{display:none}
+  .hero h1 .n{display:block}
+  .grid{grid-template-columns:1fr}
+  .two{grid-template-columns:1fr}
+  .nav{gap:16px;height:58px}
+  .nav a:not(.cta){display:none}
+  .sec{padding:64px 0}
+  .hero{padding-top:64px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap" style="padding-left:28px;padding-right:28px">
+    <span class="brand">basrun<small>PLAIN BASIC RUNNER</small></span>
+    <a href="#problem">課題</a>
+    <a href="#how">仕組み</a>
+    <a href="#qa">視覚 QA</a>
+    <a href="#limits">確認していないこと</a>
+    <a class="cta" href="#how">使い方</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="en">PLAIN-TEXT BASIC, RUN AGAINST DOCUMENTS THAT CANNOT STORE MACROS</p>
+    <h1>
+      <span class="w"><span>マクロを置けない文書を、</span><span>平文の Basic で動かす。</span></span>
+      <span class="n"><span>Office 無しで、</span><span>文書を動かす。</span></span>
+    </h1>
+    <p>Microsoft Office は要りません。文書の形式はそのままに、
+       中身だけを機械で処理します。ソースは平文なので差分が読めます。</p>
+    <ul class="fmt">
+      <li><b>.xlsx</b><span>計算する</span></li>
+      <li><b>.pptx</b><span>差し替える</span></li>
+      <li><b>.docx</b><span>書き換える</span></li>
+    </ul>
+  </div>
+  <div class="shot"><figure>
+      <div class="bar"><i></i><i></i><i></i></div>
+      <img src="assets/quote_c.jpg" alt="basrun が金額欄を埋めた見積書の .xlsx">
+    </figure></div>
+</section>
+
+
+<section class="sec" id="problem">
+  <div class="wrap">
+    <div class="h2"><b>詰まる場所</b><span class="rule"></span><span class="en">THE CONSTRAINT</span></div>
+    <p class="lead">「この Excel を処理する VBA を書いてほしい」という依頼は、
+      渡されたファイルが <code>.xlsx</code> だと素直には成立しません。
+      <b>.xlsx は仕様としてマクロを格納できない</b>からです（マクロは <code>.xlsm</code> 側）。</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>形式を変える</h3>
+        <p>.xlsm に変換する。相手の運用を変えることになり、受け入れられないことがある。</p></div>
+      <div class="card"><span class="n">02</span><h3>値を直接書く</h3>
+        <p>計算結果だけ埋める。再実行できず、式も残らない。次に数字が変われば作り直し。</p></div>
+      <div class="card"><span class="n">03</span><h3>諦める</h3>
+        <p>手作業に戻す。台数や枚数に比例して時間が増える。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>制約は格納側にある</b><span class="rule"></span><span class="en">STORAGE, NOT EXECUTION</span></div>
+    <p class="lead">格納できないだけで、<b>実行できないわけではありません。</b>
+      ソースを実行時に Basic ライブラリへ流し込めば、文書は普通の <code>.xlsx</code> のまま処理できます。</p>
+<pre><span class="c"># ソースは平文のまま。文書には一切埋め込まない</span>
+python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup
+
+<span class="c"># 文書に埋まってしまったマクロを、平文へ救出することもできる</span>
+python basrun.py pull rescued Standard --book legacy.ods</pre>
+    <p class="lead" style="margin-top:34px">回り道した先のほうが、本来の形として優れています。</p>
+    <table>
+      <tr><th></th><th>埋め込みマクロ</th><th>basrun</th></tr>
+      <tr><td>ソースの可読性</td><td>文書内の XML に埋まる</td><td><code>git diff</code> が読める</td></tr>
+      <tr><td>レビュー</td><td>実質できない</td><td>通常のコードレビュー</td></tr>
+      <tr><td>対象の形式</td><td>マクロを持てる形式のみ</td><td><code>.xlsx .pptx .docx</code> 共通</td></tr>
+      <tr><td>真実の在処</td><td>文書</td><td>ソース（ライブラリは実行時のキャッシュ）</td></tr>
+    </table>
+  </div>
+</section>
+
+<div class="band"><img src="assets/orders_c.jpg" alt="basrun が粗利率を埋めた月次表とグラフ"></div>
+<p class="cap">別の .xlsx ― 粗利率と % 書式は basrun が入れ、グラフと条件付き書式は生成時に。Excel は使っていない</p>
+
+<section class="sec" id="qa">
+  <div class="wrap">
+    <div class="h2"><b>作ったら、見る</b><span class="rule"></span><span class="en">RENDER, THEN LOOK</span></div>
+    <p class="lead">文字列が正しいことと、読める状態であることは別です。
+      <b>「うまくいきました」と表示するコードは、うまくいかなくてもそう表示します。</b>
+      だから出来上がりを描画し、目で確かめてから完了とします。</p>
+    <div class="two">
+      <div>
+        <img src="assets/worksheet_c.jpg" alt="basrun が版数を差し替えた作業指示書">
+        <p class="cap" style="text-align:left;padding-left:0">.docx ― 版数の差し替えとロット件数の追記を basrun が実行</p>
+      </div>
+      <div>
+        <img src="assets/pie_c.jpg" alt="生成した 3-D 円グラフを描画したもの">
+        <p class="cap" style="text-align:left;padding-left:0">.xlsx ― 3-D グラフとテクスチャ。描画しなければ確認できない領域</p>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:40px">
+      <div class="card"><span class="n">検出できた例</span><h3>題が 2 行に折り返す</h3>
+        <p>文字列としては完全に正しい。読み返しでは絶対に出ない欠陥。</p></div>
+      <div class="card"><span class="n">検出できた例</span><h3>暗い面に暗い文字</h3>
+        <p>デザインシステムの色を名前で対応させ、載せる面の役割を落としていた。</p></div>
+      <div class="card"><span class="n">検出できた例</span><h3>下三分の一が空白</h3>
+        <p>横幅で設計して縦の寸法を使っていなかった。数値上は正しい配置。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>確認していないこと</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">確かめた範囲と、確かめていない範囲を分けて書きます。
+      聞かれてから答えるのと、先に書いておくのとでは意味が違うためです。</p>
+    <div class="limits">
+      <h3>確認していない</h3>
+      <ul>
+        <li><b>Windows でしか動かしていません。</b>Linux / macOS のパス解決は書いてありますが未検証です。</li>
+        <li>検証した表は <b>1 種類だけ</b>です。結合セル・複数シート・巨大な表は試していません。</li>
+        <li>描画に使うのは <b>LibreOffice</b> です。Excel / PowerPoint の描画とは異なります。
+            実測で、3-D 円グラフのラベル位置が両者で違いました。</li>
+        <li>同梱している同期ツールは <b>2017 年公開で以降更新がありません。</b>
+            現行の LibreOffice で動くことは確認済みですが、将来の互換性は保証できません。</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>確認した</h3>
+      <ul>
+        <li>テスト 21 件（単体 16 / 統合 5）。LibreOffice が無い環境では統合分を飛ばす</li>
+        <li>実行の前後で、利用者の既定プロファイルがバイト単位で不変であること</li>
+        <li>処理後も <code>vbaProject.bin</code> を含まない、通常の <code>.xlsx</code> であること</li>
+        <li>結果は生成に使った実装ではなく、<b>別の実装で読み返して</b>確認</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">basrun</b> — plain-text Basic runner</span>
+    <span>同期は <a href="https://pypi.org/project/obasync/">obasync</a>（imacat, Apache-2.0）に委譲</span>
+    <span>配色は <a href="https://github.com/nexu-io/open-design">open-design</a>（Apache-2.0）から</span>
+  </div>
+</footer>
+
+</body>
+</html>
