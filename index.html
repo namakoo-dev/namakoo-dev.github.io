@@ -49,8 +49,23 @@ header{position:sticky;top:0;z-index:20;background:#fff;
           border-radius:var(--radius-sm);font-weight:600}
 .nav .cta:hover{background:var(--accent-hover);color:#fff}
 
-/* ── ヒーロー: 濃紺の全面。写真の代わりに実物の描画 ─────────────── */
-.hero{background:var(--fg);color:#fff;padding:104px 0 0}
+/* ── ヒーロー ─────────────────────────────────────────────────
+ * 参考サイトは研究室の映像で「どういう場所か」を読む前に伝えていた。
+ * ★ 開発道具でそれに当たるのは、動いているコードそのもの。
+ *   飾りの画像ではなく、このページが扱っている当の .bas を背後に敷く。
+ *   素材も認証もライセンスも要らず、中身が主題と一致する。
+ * ─────────────────────────────────────────────────────────── */
+.hero{background:var(--fg);color:#fff;padding:104px 0 0;position:relative;
+      overflow:hidden;isolation:isolate}
+/* ★ 最初は左から敷いて、文章の背後を横切って読みにくくした (描画して確認)。
+   文章は左にあるので、コードは右へ寄せる。空いていた右側も同時に埋まる。 */
+.hero .bgcode{position:absolute;top:0;bottom:0;right:0;width:56%;z-index:-1;
+  margin:0;padding:30px 0 0 24px;
+  font-family:var(--font-mono);font-size:13px;line-height:1.75;white-space:pre;
+  color:#8fa3bd;opacity:.16;pointer-events:none;user-select:none;overflow:hidden;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 26%,#000 78%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0%,#000 26%,#000 78%,transparent 100%)}
+@media(max-width:820px){.hero .bgcode{display:none}}
 .hero h1{font-size:clamp(27px,4.4vw,46px);line-height:1.5;margin:0 0 20px;
          letter-spacing:.04em;font-weight:700}
 /* ★ 句ごとに inline-block にして、意味の切れ目でだけ折り返させる。
@@ -93,6 +108,7 @@ header{position:sticky;top:0;z-index:20;background:#fff;
       border-radius:var(--radius-lg);padding:26px 24px;box-shadow:var(--shadow-card)}
 .card h3{margin:0 0 10px;font-size:15.5px;letter-spacing:.04em}
 .card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.85}
+.ic{width:30px;height:30px;color:var(--accent);display:block;margin-bottom:16px}
 .card .n{display:inline-block;font-family:var(--font-mono);font-size:11px;
          color:var(--accent);letter-spacing:.14em;margin-bottom:12px}
 
@@ -167,6 +183,41 @@ footer a{color:#c3d0e0}
 </header>
 
 <section class="hero">
+  <pre class="bgcode" aria-hidden="true">Option VBASupport 1
+Option Explicit
+
+&#x27; 見積: 単価 x 数量 と合計
+Sub FillQuote(oDoc As Object)
+    Dim oSheet As Object, i As Long, total As Double
+    oSheet = oDoc.Sheets.getByIndex(0)
+    For i = 5 To 9
+        Dim u As Double, q As Double
+        u = oSheet.getCellByPosition(2, i).getValue()
+        q = oSheet.getCellByPosition(3, i).getValue()
+        oSheet.getCellByPosition(4, i).setValue(u * q)
+        total = total + u * q
+    Next i
+    oSheet.getCellByPosition(4, 10).setValue(total)
+End Sub
+
+&#x27; 受注: 粗利率 = (受注額 - 原価) / 受注額。書式もここで付ける
+Sub FillMargin(oDoc As Object)
+    Dim oSheet As Object, i As Long
+    Dim oFmts As Object, nFmt As Long
+    Dim aLoc As New com.sun.star.lang.Locale
+    oSheet = oDoc.Sheets.getByIndex(0)
+    oFmts = oDoc.getNumberFormats()
+    nFmt = oFmts.queryKey(&quot;0.0%&quot;, aLoc, False)
+    If nFmt = -1 Then nFmt = oFmts.addNew(&quot;0.0%&quot;, aLoc)
+    For i = 4 To 8
+        Dim s As Double, c As Double
+        s = oSheet.getCellByPosition(2, i).getValue()
+        c = oSheet.getCellByPosition(3, i).getValue()
+        If s &gt; 0 Then oSheet.getCellByPosition(4, i).setValue((s - c) / s)
+    Next i
+    oSheet.getCellRangeByPosition(4, 4, 4, 8).NumberFormat = nFmt
+End Sub
+</pre>
   <div class="wrap">
     <p class="en">PLAIN-TEXT BASIC, RUN AGAINST DOCUMENTS THAT CANNOT STORE MACROS</p>
     <h1>
@@ -195,11 +246,11 @@ footer a{color:#c3d0e0}
       渡されたファイルが <code>.xlsx</code> だと素直には成立しません。
       <b>.xlsx は仕様としてマクロを格納できない</b>からです（マクロは <code>.xlsm</code> 側）。</p>
     <div class="grid">
-      <div class="card"><span class="n">01</span><h3>形式を変える</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a1 1 0 0 1-1-1V2a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8z" /> <path d="M20 8v12a2 2 0 0 1-2 2h-4.182" /> <path d="m3.305 19.53.923-.382" /> <path d="M4 10.592V4a2 2 0 0 1 2-2h8" /> <path d="m4.228 16.852-.924-.383" /> <path d="m5.852 15.228-.383-.923" /> <path d="m5.852 20.772-.383.924" /> <path d="m8.148 15.228.383-.923" /> <path d="m8.53 21.696-.382-.924" /> <path d="m9.773 16.852.922-.383" /> <path d="m9.773 19.148.922.383" /> <circle cx="7" cy="18" r="3" /></svg><h3>形式を変える</h3>
         <p>.xlsm に変換する。相手の運用を変えることになり、受け入れられないことがある。</p></div>
-      <div class="card"><span class="n">02</span><h3>値を直接書く</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z" /></svg><h3>値を直接書く</h3>
         <p>計算結果だけ埋める。再実行できず、式も残らない。次に数字が変われば作り直し。</p></div>
-      <div class="card"><span class="n">03</span><h3>諦める</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <line x1="9" x2="15" y1="15" y2="9" /></svg><h3>諦める</h3>
         <p>手作業に戻す。台数や枚数に比例して時間が増える。</p></div>
     </div>
   </div>
@@ -246,11 +297,11 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       </div>
     </div>
     <div class="grid" style="margin-top:40px">
-      <div class="card"><span class="n">検出できた例</span><h3>題が 2 行に折り返す</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16-3 3 3 3" /> <path d="M3 12h14.5a1 1 0 0 1 0 7H13" /> <path d="M3 19h6" /> <path d="M3 5h18" /></svg><h3>題が 2 行に折り返す</h3>
         <p>文字列としては完全に正しい。読み返しでは絶対に出ない欠陥。</p></div>
-      <div class="card"><span class="n">検出できた例</span><h3>暗い面に暗い文字</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 18a6 6 0 0 0 0-12v12z" /></svg><h3>暗い面に暗い文字</h3>
         <p>デザインシステムの色を名前で対応させ、載せる面の役割を落としていた。</p></div>
-      <div class="card"><span class="n">検出できた例</span><h3>下三分の一が空白</h3>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M3 9h18" /></svg><h3>下三分の一が空白</h3>
         <p>横幅で設計して縦の寸法を使っていなかった。数値上は正しい配置。</p></div>
     </div>
   </div>
