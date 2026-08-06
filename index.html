@@ -84,13 +84,43 @@ header{position:sticky;top:0;z-index:20;background:#fff;
         padding:9px 14px;display:flex;gap:9px;align-items:baseline}
 .fmt b{font-family:var(--font-mono);font-size:12.5px;color:#a99bff;letter-spacing:.04em}
 .fmt span{font-size:12.5px;color:#8fa3bd}
-.hero .shot{margin:56px auto 0;max-width:var(--w);padding:0 28px 72px;line-height:0}
-.hero .shot figure{margin:0;background:#0d2439;border:1px solid #1d3a54;
-  border-radius:10px;padding:10px;box-shadow:var(--shadow-lift)}
-.hero .shot .bar{display:flex;gap:6px;padding:2px 4px 10px}
-.hero .shot .bar i{width:9px;height:9px;border-radius:50%;background:#284866;
-  display:block}
-.hero .shot img{width:100%;display:block;border-radius:4px}
+.hero .shot{margin:56px auto 0;max-width:var(--w);padding:0 28px 72px}
+
+/* ── ヒーローの図: 変換そのもの ──────────────────────────────
+ * ★ 最初は「描画した見積書」をそのまま大きく置いていた。だが**ここは実物を
+ *   見せる場所ではなく、何をする道具かを一目で伝える場所** (Namakoo の指摘)。
+ *   実物は下の節に 4 枚ある。しかも白い紙を暗い面に落とすので浮いて重かった。
+ * ★ 撮ったものではなく、暗い面で組み直す。左のコードは実際の Amount.bas の
+ *   行、右の数字は実際に basrun が入れた金額。**見た目は作るが、中身は作らない。**
+ * ─────────────────────────────────────────────────────────── */
+/* ★ 中央揃えにしたら、表のほうが背が高いぶんコードだけ下がって
+   左右の見出しがずれた (描画して確認)。見出しは上で揃え、矢印だけ中央へ。 */
+.tf{display:grid;grid-template-columns:1fr 148px 1fr;align-items:start;
+  background:#0d2439;border:1px solid #1d3a54;border-radius:12px;
+  padding:30px 32px;box-shadow:var(--shadow-lift)}
+.tf .tag{display:block;font-family:var(--font-mono);font-size:11px;
+  letter-spacing:.12em;color:#7d93b2;margin-bottom:16px}
+.tf .tag em{font-style:normal;color:#a99bff;margin-left:10px;letter-spacing:.04em}
+.tf pre{background:none;box-shadow:none;padding:0;border-radius:0;
+  font-size:11.5px;line-height:2.05;color:#8fa3bd;overflow:visible;
+  white-space:pre;text-indent:0}
+.tf pre b{color:#a99bff;font-weight:400}
+.tf-mid{text-align:center;padding:0 12px;align-self:center}
+.tf-mid span{display:block;font-family:var(--font-mono);font-size:11px;
+  color:#a99bff;letter-spacing:.08em;margin-bottom:12px}
+.tf-mid svg{width:100%;height:12px;overflow:visible}
+.tf-mid path{stroke:#3d5e80;stroke-width:1.2;fill:none}
+.tf-mid marker path{fill:#3d5e80;stroke:none}
+.doc{width:100%;border-collapse:collapse;font-size:11.5px;
+  font-family:var(--font-mono)}
+.doc td{padding:8px 0;border-bottom:1px solid #16324b}
+.doc .bar{display:block;height:7px;border-radius:3px;background:#22415e}
+.doc .num{text-align:right;color:#6d8299;padding-left:14px}
+/* ★ この列だけが basrun の出力。ここに視線が行けば図の役目は終わり。 */
+.doc .out{text-align:right;color:#a99bff;padding-left:16px}
+.doc tr:last-child td{border-bottom:none;border-top:1px solid #2a4a68;
+  padding-top:12px;color:#c3d0e0}
+.doc tr:last-child .out{font-weight:700}
 
 /* ── 見出し: 和文 + 細い罫線 + 英語副題 ───────────────────────── */
 .sec{padding:96px 0}
@@ -111,6 +141,22 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 .ic{width:30px;height:30px;color:var(--accent);display:block;margin-bottom:16px}
 .card .n{display:inline-block;font-family:var(--font-mono);font-size:11px;
          color:var(--accent);letter-spacing:.14em;margin-bottom:12px}
+
+/* ── 場面 ────────────────────────────────────────────────────
+ * ★ 「.xlsx はマクロを格納できない」は仕様の話で、読み手の話になっていない。
+ *   自分の状況だと気づく手掛かりが先に要る。
+ * ★ 作り話の事例にはしない ── ここに出てくる見積書は、一番上の図と同じ文書で、
+ *   金額は実際に basrun が入れた値。
+ * ─────────────────────────────────────────────────────────── */
+.scene{background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);box-shadow:var(--shadow-card);
+  padding:28px 30px;margin:0 0 34px;max-width:70ch}
+.scene .q{margin:0 0 18px;font-size:17px;font-weight:700;line-height:1.75;
+  letter-spacing:.03em}
+.scene ul{margin:0;padding-left:20px;color:var(--muted);font-size:14px}
+.scene li{margin-bottom:7px}
+.scene li:last-child{margin-bottom:0}
+.scene b{color:var(--fg-2)}
 
 /* ── コード ──────────────────────────────────────────────────── */
 pre{background:var(--fg);color:#dbe6f5;border-radius:var(--radius-lg);
@@ -188,6 +234,15 @@ footer a{color:#c3d0e0}
   .two{grid-template-columns:1fr}
   /* ★ 名前と説明が横で押し合って読めなくなった (描画して確認)。
      1 行目に名前と矢印、説明はその下へ落とす。罫線は幅が無いので出さない。 */
+  /* ★ 3 列のままでは左のコードが潰れて読めない。縦に積んで矢印を回す。 */
+  .tf{grid-template-columns:1fr;gap:22px;padding:24px}
+  /* ★ 実測: 390px で 6px、320px で 76px はみ出していた。ヒーローが
+     overflow:hidden なのでページ幅には出ず、**黙って切れる**。
+     行を短く書き換えれば嘘になるので、折り返して字下げで続きを示す。 */
+  .tf pre{white-space:pre-wrap;overflow-wrap:anywhere;
+          padding-left:18px;text-indent:-18px}
+  .tf-mid{padding:0}
+  .tf-mid svg{height:26px;width:26px;margin:0 auto;transform:rotate(90deg)}
   .link{flex-wrap:wrap;gap:10px 14px;padding:16px 0}
   .link .rule{display:none}
   .link b{flex:1 1 auto}
@@ -267,27 +322,80 @@ End Sub
       <li><b>.docx</b><span>書き換える</span></li>
     </ul>
   </div>
-  <div class="shot"><figure>
-      <div class="bar"><i></i><i></i><i></i></div>
-      <img src="assets/quote_c.jpg" alt="basrun が金額欄を埋めた見積書の .xlsx">
-    </figure></div>
+  <div class="shot">
+    <div class="tf">
+      <div>
+        <span class="tag">Amount.bas <em>平文。git に置く</em></span>
+<pre>u = oSheet.getCellByPosition(2, i).getValue()
+q = oSheet.getCellByPosition(3, i).getValue()
+<b>oSheet.getCellByPosition(4, i).setValue(u * q)</b>
+total = total + u * q</pre>
+      </div>
+      <div class="tf-mid">
+        <span>basrun apply</span>
+        <svg viewBox="0 0 100 12" aria-hidden="true" preserveAspectRatio="none">
+          <defs><marker id="ha" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker></defs>
+          <path d="M0 6 H92" marker-end="url(#ha)"/>
+        </svg>
+      </div>
+      <div>
+        <span class="tag">見積書.xlsx <em>マクロは入らない</em></span>
+        <table class="doc">
+          <tr><td style="width:44%"><i class="bar" style="width:88%"></i></td>
+              <td class="num">1,280</td><td class="num">40</td>
+              <td class="out">51,200</td></tr>
+          <tr><td><i class="bar" style="width:66%"></i></td>
+              <td class="num">340</td><td class="num">120</td>
+              <td class="out">40,800</td></tr>
+          <tr><td><i class="bar" style="width:78%"></i></td>
+              <td class="num">95</td><td class="num">500</td>
+              <td class="out">47,500</td></tr>
+          <tr><td><i class="bar" style="width:58%"></i></td>
+              <td class="num">8,600</td><td class="num">6</td>
+              <td class="out">51,600</td></tr>
+          <tr><td><i class="bar" style="width:72%"></i></td>
+              <td class="num">720</td><td class="num">80</td>
+              <td class="out">57,600</td></tr>
+          <tr><td>合計</td><td class="num"></td><td class="num"></td>
+              <td class="out">248,700</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
 </section>
 
 
 <section class="sec" id="problem">
   <div class="wrap">
     <div class="h2"><b>詰まる場所</b><span class="rule"></span><span class="en">THE CONSTRAINT</span></div>
-    <p class="lead">「この Excel を処理する VBA を書いてほしい」という依頼は、
-      渡されたファイルが <code>.xlsx</code> だと素直には成立しません。
-      <b>.xlsx は仕様としてマクロを格納できない</b>からです（マクロは <code>.xlsm</code> 側）。</p>
+    <p class="lead" style="margin-bottom:22px">たとえば、こういう場面です。</p>
+    <div class="scene">
+      <p class="q">「この見積、金額と合計を入れて今日中にお願いします。<br>
+        毎月同じ形で来るので、来月からも」</p>
+      <ul>
+        <li>渡されたのは <code>.xlsx</code>。<b>マクロは 1 バイトも入っていない</b></li>
+        <li>手元の端末に <b>Microsoft Office が無い</b></li>
+        <li>相手の運用は変えられない。<b>形式もそのまま返す</b>のが前提</li>
+        <li>同じ処理が<b>来月もある</b>。今回かぎりの手作業では終わらない</li>
+      </ul>
+    </div>
+    <p class="lead">この依頼は、渡されたファイルが <code>.xlsx</code> だと素直には成立しません。
+      <b>.xlsx は仕様としてマクロを格納できない</b>からです（マクロは <code>.xlsm</code> 側）。
+      <b>VBA を書けるかどうかではなく、書いたものの置き場所がない</b>という形で詰まります。
+      そして逃げ道は 3 つとも、何かを諦めることになります。</p>
     <div class="grid">
       <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a1 1 0 0 1-1-1V2a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8z" /> <path d="M20 8v12a2 2 0 0 1-2 2h-4.182" /> <path d="m3.305 19.53.923-.382" /> <path d="M4 10.592V4a2 2 0 0 1 2-2h8" /> <path d="m4.228 16.852-.924-.383" /> <path d="m5.852 15.228-.383-.923" /> <path d="m5.852 20.772-.383.924" /> <path d="m8.148 15.228.383-.923" /> <path d="m8.53 21.696-.382-.924" /> <path d="m9.773 16.852.922-.383" /> <path d="m9.773 19.148.922.383" /> <circle cx="7" cy="18" r="3" /></svg><h3>形式を変える</h3>
         <p>.xlsm に変換する。相手の運用を変えることになり、受け入れられないことがある。</p></div>
       <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z" /></svg><h3>値を直接書く</h3>
         <p>計算結果だけ埋める。再実行できず、式も残らない。次に数字が変われば作り直し。</p></div>
       <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <line x1="9" x2="15" y1="15" y2="9" /></svg><h3>諦める</h3>
-        <p>手作業に戻す。台数や枚数に比例して時間が増える。</p></div>
+        <p>手作業に戻す。枚数や月数に比例して時間が増える。来月も同じだけかかる。</p></div>
     </div>
+    <p class="lead" style="margin:34px 0 0"><b>3 つとも、技術的な限界ではありません。</b>
+      できない理由が仕様に書いてあるので、そこで止まりやすいだけです。
+      止まっているのは <b>格納</b> の側であって、<b>実行</b> の側ではありません。</p>
   </div>
 </section>
 
