@@ -126,6 +126,29 @@ pre .k{color:#a99bff}
 .cap{font-size:12px;color:var(--muted);text-align:center;padding:14px 28px 0;
      letter-spacing:.04em}
 
+/* ── 図解 ────────────────────────────────────────────────────
+ * ★ 実物の描画が 4 枚あるが、全部「ページの絵」で種類が同じだった。
+ *   仕組みは線で見せるほうが早い。色は本文のトークンをそのまま使うので
+ *   配色は増えない。矢印の頭は CSS 側で塗る (marker は色を継承しない)。
+ * ★ 縮めると文字が読めなくなるので、狭い画面には縦組みの別図を出す。
+ *   同じ図を横スクロールさせるのは、読ませていないのと同じ。
+ * ─────────────────────────────────────────────────────────── */
+.flow{margin:0 0 44px}
+.flow svg{width:100%;height:auto;display:block;font-family:var(--font-body)}
+.flow .box{fill:var(--surface);stroke:var(--border);stroke-width:1}
+.flow .box.tmp{stroke-dasharray:5 4}
+.flow .t{fill:var(--fg);font-size:14px;font-weight:700;letter-spacing:.04em}
+.flow .m{fill:var(--accent);font-size:12px;font-family:var(--font-mono)}
+.flow .s{fill:var(--muted);font-size:11.5px}
+.flow .ln{stroke:var(--muted);stroke-width:1.2;fill:none}
+.flow .ln.acc{stroke:var(--accent);stroke-dasharray:4 4}
+.flow .lb{fill:var(--fg-2);font-size:11.5px;letter-spacing:.06em}
+.flow .lbm{fill:var(--accent);font-size:11px;font-family:var(--font-mono);
+           letter-spacing:.08em}
+.flow marker path{fill:var(--muted)}
+.flow marker.acc path{fill:var(--accent)}
+.flow--sp{display:none}
+
 /* ── 二段組 ──────────────────────────────────────────────────── */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
 .two img{width:100%;border:1px solid var(--border);border-radius:var(--radius-md);
@@ -162,6 +185,7 @@ footer a{color:#c3d0e0}
   .hero h1 .n{display:block}
   .grid{grid-template-columns:1fr}
   .two{grid-template-columns:1fr}
+  .flow--pc{display:none} .flow--sp{display:block}
   .nav{gap:16px;height:58px}
   .nav a:not(.cta){display:none}
   .sec{padding:64px 0}
@@ -261,6 +285,93 @@ End Sub
     <div class="h2"><b>制約は格納側にある</b><span class="rule"></span><span class="en">STORAGE, NOT EXECUTION</span></div>
     <p class="lead">格納できないだけで、<b>実行できないわけではありません。</b>
       ソースを実行時に Basic ライブラリへ流し込めば、文書は普通の <code>.xlsx</code> のまま処理できます。</p>
+
+    <div class="flow flow--pc">
+      <svg viewBox="0 0 960 250" role="img"
+           aria-label="平文の .bas を実行時に Basic ライブラリへ流し込み、マクロを持てない .xlsx を処理する流れ。逆に pull で文書内のマクロを平文へ取り出せる">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+          <marker id="a2" class="acc" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+        </defs>
+
+        <rect class="box" x="16" y="36" width="252" height="100" rx="8"/>
+        <text class="t" x="142" y="72" text-anchor="middle">平文のソース</text>
+        <text class="m" x="142" y="95" text-anchor="middle">src/Amount.bas</text>
+        <text class="s" x="142" y="118" text-anchor="middle">git diff が読める。真実はここ</text>
+
+        <path class="ln" d="M276 86 H344" marker-end="url(#a1)"/>
+        <text class="lbm" x="310" y="74" text-anchor="middle">apply</text>
+        <text class="lb"  x="310" y="106" text-anchor="middle">流し込む</text>
+
+        <rect class="box tmp" x="354" y="36" width="252" height="100" rx="8"/>
+        <text class="t" x="480" y="72" text-anchor="middle">Basic ライブラリ</text>
+        <text class="m" x="480" y="95" text-anchor="middle">MyLib</text>
+        <text class="s" x="480" y="118" text-anchor="middle">実行時だけ。終わればもう無い</text>
+
+        <!-- ★ ここに invoke と書きかけた。そんな下位コマンドは無い。
+             流し込みと実行はどちらも apply が一度にやる。 -->
+        <path class="ln" d="M614 86 H682" marker-end="url(#a1)"/>
+        <text class="lb"  x="648" y="106" text-anchor="middle">文書を処理</text>
+
+        <rect class="box" x="692" y="36" width="252" height="100" rx="8"/>
+        <text class="t" x="818" y="72" text-anchor="middle">文書</text>
+        <text class="m" x="818" y="95" text-anchor="middle">book.xlsx</text>
+        <text class="s" x="818" y="118" text-anchor="middle">ソースは埋め込まれない</text>
+
+        <path class="ln acc" d="M818 136 V200 H142 V144" marker-end="url(#a2)"/>
+        <!-- ★ pull を中央に置くと、続く和文が右へ伸びて全体が右寄りに見えた
+             (描画して確認)。二つ合わせた幅で中央に合わせる。 -->
+        <text class="lbm" x="312" y="222">pull</text>
+        <text class="lb"  x="348" y="222">― 文書に埋まってしまったマクロを、平文へ救出する</text>
+      </svg>
+    </div>
+
+    <div class="flow flow--sp">
+      <svg viewBox="0 0 340 486" role="img"
+           aria-label="平文の .bas を実行時に Basic ライブラリへ流し込み、マクロを持てない .xlsx を処理する流れ">
+        <defs>
+          <marker id="b1" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+          <marker id="b2" class="acc" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+        </defs>
+
+        <rect class="box" x="44" y="8" width="282" height="92" rx="8"/>
+        <text class="t" x="64" y="40">平文のソース</text>
+        <text class="m" x="64" y="64">src/Amount.bas</text>
+        <text class="s" x="64" y="86">git diff が読める。真実はここ</text>
+
+        <path class="ln" d="M185 100 V160" marker-end="url(#b1)"/>
+        <text class="lbm" x="201" y="125">apply</text>
+        <text class="lb"  x="201" y="143">流し込む</text>
+
+        <rect class="box tmp" x="44" y="170" width="282" height="92" rx="8"/>
+        <text class="t" x="64" y="202">Basic ライブラリ</text>
+        <text class="m" x="64" y="226">MyLib</text>
+        <text class="s" x="64" y="248">実行時だけ。終わればもう無い</text>
+
+        <path class="ln" d="M185 262 V322" marker-end="url(#b1)"/>
+        <text class="lb"  x="201" y="297">文書を処理</text>
+
+        <rect class="box" x="44" y="332" width="282" height="92" rx="8"/>
+        <text class="t" x="64" y="364">文書</text>
+        <text class="m" x="64" y="388">book.xlsx</text>
+        <text class="s" x="64" y="410">ソースは埋め込まれない</text>
+
+        <!-- ★ 箱の下辺と同じ高さで左へ引いたら、線が宙から生えて見えた
+             (描画して確認)。一度下へ降りてから折り返す。 -->
+        <path class="ln acc" d="M185 424 V442 H26 V54 H36" marker-end="url(#b2)"/>
+        <text class="lbm" x="26" y="470">pull</text>
+        <text class="lb"  x="58" y="470">― 埋まったマクロを平文へ救出</text>
+      </svg>
+    </div>
+
 <pre><span class="c"># ソースは平文のまま。文書には一切埋め込まない</span>
 python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup
 
