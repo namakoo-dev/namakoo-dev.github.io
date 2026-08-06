@@ -122,6 +122,28 @@ header{position:sticky;top:0;z-index:20;background:#fff;
   padding-top:12px;color:#c3d0e0}
 .doc tr:last-child .out{font-weight:700}
 
+/* ── 図が動く一箇所 ──────────────────────────────────────────
+ * ★ 動くこと自体は目的ではない。この図が言いたいのは「平文が文書の中身に
+ *   なる」なので、**入る側 (金額の列) だけ**が後から現れる。他は動かさない。
+ * ★ no-preference の側に書く。opacity:0 を既定にしてアニメで戻す作りだと、
+ *   動きを切っている人に **何も見えなくなる**。既定は「見えている」状態。
+ * ─────────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: no-preference){
+  .doc .out{animation:fill .5s cubic-bezier(.2,.7,.3,1) both}
+  .doc tr:nth-child(1) .out{animation-delay:.30s}
+  .doc tr:nth-child(2) .out{animation-delay:.40s}
+  .doc tr:nth-child(3) .out{animation-delay:.50s}
+  .doc tr:nth-child(4) .out{animation-delay:.60s}
+  .doc tr:nth-child(5) .out{animation-delay:.70s}
+  .doc tr:nth-child(6) .out{animation-delay:.92s}
+  .tf-mid svg path{animation:draw .8s ease-out both}
+  @keyframes fill{from{opacity:0;transform:translateY(-5px)}
+                  to{opacity:1;transform:none}}
+  @keyframes draw{from{opacity:0}to{opacity:1}}
+  /* ★ 紙に出すときは待つ相手がいない。最初から最終状態にする。 */
+  @media print{.doc .out,.tf-mid svg path{animation:none}}
+}
+
 /* ── 見出し: 和文 + 細い罫線 + 英語副題 ───────────────────────── */
 .sec{padding:96px 0}
 .sec.alt{background:var(--surface-warm)}
@@ -516,6 +538,23 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
     <p class="lead">文字列が正しいことと、読める状態であることは別です。
       <b>「うまくいきました」と表示するコードは、うまくいかなくてもそう表示します。</b>
       だから出来上がりを描画し、目で確かめてから完了とします。</p>
+
+    <p class="lead">値だけなら CSV に落とせば読めます。ですが CSV になった時点で、
+      <b>結合・列幅・シートの構造</b>は落ちます。座標そのものは数字として残っても、
+      <b>見え方は残りません</b>。グラフに至っては文字としての姿がないので、
+      書けているかどうかを読み返しで確かめる方法がありません。</p>
+    <table>
+      <tr><th></th><th>文字として読める</th><th>描画しないと分からない</th></tr>
+      <tr><td>セル</td><td>値・数式・座標</td><td>結合の見え方、列幅で切れた文字</td></tr>
+      <tr><td>書式</td><td>指定した規則</td><td>その規則が当たった結果の色</td></tr>
+      <tr><td>グラフ</td><td>定義（XML）</td><td><b>そもそも出ているかどうか</b></td></tr>
+    </table>
+    <p class="lead" style="margin-top:34px">実際に踏みました。グラフの図形に
+      <b>大きさが書かれておらず</b>、グラフは存在するのに面積がゼロ ―― つまり
+      見えない状態になっていました。<b>問い合わせれば「グラフ 1 個」と正しく返ります。</b>
+      存在を確認する方法では、これは見つかりません。原因を 3 回続けて読み違え、
+      最後は「この描画系はグラフに対応していない」と<b>道具の限界に帰着させました</b>。
+      3 回とも外れです。<b>描画して初めて、自分の生成物を疑えました。</b></p>
     <div class="two">
       <div>
         <img src="assets/worksheet_c.jpg" alt="basrun が版数を差し替えた作業指示書">
