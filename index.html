@@ -50,7 +50,11 @@ html{scroll-behavior:smooth}
    地は全部「固定した層」に持たせ、body 自身は無地にする。 */
 body{margin:0;color:var(--fg);font-family:var(--font-body);
      font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased;
-     background:var(--bg)}
+     background:var(--bg);
+     /* ★ 日本語を文節で折り返す。既定だと「そのまま」が「そ／のままに」と
+        語の途中で割れる（実機で Namakoo が指摘）。auto-phrase は文節境界で
+        改行する（Chromium 対応・非対応ブラウザは従来の折り返しに劣化）。 */
+     word-break:auto-phrase}
 /* 方眼。固定して置くので、送っても地が流れず落ち着いている。
    ★ 明るい節の面は .5 まで薄めてある。濃いと方眼がそこだけ消え、
    地が別物になる (実測: 線と紙の差が 1.335 → 1.115 まで落ちていた)。 */
@@ -326,8 +330,11 @@ pre::before{
 /* ── コード ──────────────────────────────────────────────────── */
 pre{background:var(--fg);color:#dbe6f5;border-radius:var(--radius-lg);
     padding:22px 24px;overflow-x:auto;font-family:var(--font-mono);
-    font-size:13px;line-height:1.85;margin:0;box-shadow:var(--shadow-lift)}
-pre .c{color:#7d93b2}
+    font-size:13px;line-height:1.85;margin:0;box-shadow:var(--shadow-lift);
+    /* ★ コードは文節でなく「長いトークンで折る」。auto-phrase を継がせない。 */
+    word-break:normal}
+/* ★ コメントは文章なので文節で折る（コードのトークンは pre の normal のまま）。 */
+pre .c{color:#7d93b2;word-break:auto-phrase}
 pre .k{color:#a99bff}
 
 /* ── 実物の載せ方: 台紙 ──────────────────────────────────────
