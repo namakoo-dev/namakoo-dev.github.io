@@ -169,6 +169,13 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 .tf-mid span{display:block;font-family:var(--font-mono);font-size:11px;
   color:#a99bff;letter-spacing:.08em;margin-bottom:12px}
 .tf-mid svg{width:100%;height:12px;overflow:visible}
+/* ★ データが流れる脈動。矢印パスに沿って光の破線を 1 回だけ走らせる。
+   ★ 点の translate ではなく stroke で描くのは、モバイルで矢印が 90° 回転しても
+   パスに沿うから（向き非依存）。既定は不可視 (offset で外へ・opacity 0)、
+   動くのは下の no-preference の中だけ。 */
+.tf-mid svg .pulse{fill:none;stroke:var(--accent);stroke-width:3;
+  stroke-linecap:round;stroke-dasharray:10 1000;stroke-dashoffset:10;opacity:0;
+  filter:drop-shadow(0 0 3px var(--accent))}
 .tf-mid path{stroke:#3d5e80;stroke-width:1.2;fill:none}
 .tf-mid marker path{fill:#3d5e80;stroke:none}
 .doc{width:100%;border-collapse:collapse;font-size:11.5px;
@@ -197,9 +204,14 @@ header{position:sticky;top:0;z-index:20;background:#fff;
   .doc tr:nth-child(5) .out{animation-delay:.70s}
   .doc tr:nth-child(6) .out{animation-delay:.92s}
   .tf-mid svg path{animation:draw .8s ease-out both}
+  /* ★ データフローの脈動。矢印を 1 回だけ光の破線が渡る。常時は動かさない。 */
+  .tf-mid svg .pulse{animation:flow 1.05s ease-in .2s both}
   @keyframes fill{from{opacity:0;transform:translateY(-5px)}
                   to{opacity:1;transform:none}}
   @keyframes draw{from{opacity:0}to{opacity:1}}
+  @keyframes flow{0%{stroke-dashoffset:10;opacity:0}
+                  14%{opacity:1} 86%{opacity:1}
+                  100%{stroke-dashoffset:-92;opacity:0}}
   /* ★ ヒーローの 2 つの光を、別々の周期で漂わせる。26s と 34s で割り切れないので
      ずっと重なり方が変わり続ける (同期しない = 単調にならない)。transform だけを
      動かすので合成側で処理され軽い。ease-in-out+alternate で端が滑らか。 */
@@ -459,6 +471,7 @@ total = total + u * q</pre>
                   markerWidth="7" markerHeight="7" orient="auto">
             <path d="M0 0 L10 5 L0 10 Z"/></marker></defs>
           <path d="M0 6 H92" marker-end="url(#ha)"/>
+          <path class="pulse" d="M0 6 H92"/>
         </svg>
       </div>
       <div>
