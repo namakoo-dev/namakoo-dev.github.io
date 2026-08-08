@@ -212,6 +212,15 @@ header{position:sticky;top:0;z-index:20;background:#fff;
   @keyframes flow{0%{stroke-dashoffset:10;opacity:0}
                   14%{opacity:1} 86%{opacity:1}
                   100%{stroke-dashoffset:-92;opacity:0}}
+  /* ★ basrun 側の ✓ を、スクロールで上から順に点灯させる。JS は入れない ――
+     各項目が自分の view() タイムラインで発火するので、勝手に段差がつく。
+     ★ 非対応ブラウザ (Safari 等) では @supports が外れ、静的に全部見える。 */
+  @supports (animation-timeline: view()){
+    .vs-new .vs-item{opacity:0;transform:translateY(8px);
+      animation:vsrise linear both;animation-timeline:view();
+      animation-range:entry 12% entry 58%}
+  }
+  @keyframes vsrise{to{opacity:1;transform:none}}
   /* ★ ヒーローの 2 つの光を、別々の周期で漂わせる。26s と 34s で割り切れないので
      ずっと重なり方が変わり続ける (同期しない = 単調にならない)。transform だけを
      動かすので合成側で処理され軽い。ease-in-out+alternate で端が滑らか。 */
@@ -242,6 +251,27 @@ header{position:sticky;top:0;z-index:20;background:#fff;
       border-radius:var(--radius-lg);padding:26px 24px;box-shadow:var(--shadow-card)}
 .card h3{margin:0 0 10px;font-size:15.5px;letter-spacing:.04em}
 .card p{margin:0;font-size:13.5px;color:var(--muted);line-height:1.85}
+
+/* ── 対比（埋め込みマクロ vs basrun）─────────────────────────────
+   ★ 表より 2 列の視覚比較の方が「劣る道 / 優れた道」が一目で分かる。
+   配色は抑制を保つ: ✗ は muted、✓ は accent。派手な赤緑にはしない。 */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:22px}
+.vs-col{border:1px solid var(--border);border-radius:var(--radius-lg);
+  padding:22px 22px 10px;background:var(--surface)}
+.vs-old{opacity:.92}
+.vs-new{border-color:#d6cffe;box-shadow:0 0 0 3px #f1edff}   /* ★ 優れた側を静かに強調 */
+.vs-cap{font-family:var(--font-mono);font-size:11px;letter-spacing:.12em;
+  color:var(--muted);margin-bottom:6px}
+.vs-new .vs-cap{color:var(--accent)}
+.vs-item{display:flex;gap:12px;align-items:flex-start;padding:14px 0;
+  border-top:1px solid var(--border)}
+.vs-item .mk{flex:0 0 auto;width:21px;height:21px;border-radius:50%;
+  display:grid;place-items:center;font-size:12px;font-weight:700;margin-top:1px}
+.vs-old .mk{background:#eef2f7;color:var(--muted)}
+.vs-new .mk{background:var(--accent);color:#fff}
+.vs-item b{display:block;font-size:13px;letter-spacing:.03em;font-weight:600}
+.vs-item p{margin:2px 0 0;font-size:13px;color:var(--muted);line-height:1.7}
+@media(max-width:640px){.vs{grid-template-columns:1fr;gap:14px}}
 .ic{width:30px;height:30px;color:var(--accent);display:block;margin-bottom:16px}
 .card .n{display:inline-block;font-family:var(--font-mono);font-size:11px;
          color:var(--accent);letter-spacing:.14em;margin-bottom:12px}
@@ -631,13 +661,22 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup
 <span class="c"># 文書に埋まってしまったマクロを、平文へ救出することもできる</span>
 python basrun.py pull rescued Standard --book legacy.ods</pre>
     <p class="lead" style="margin-top:34px">回り道した先のほうが、本来の形として優れています。</p>
-    <table>
-      <tr><th></th><th>埋め込みマクロ</th><th>basrun</th></tr>
-      <tr><td>ソースの可読性</td><td>文書内の XML に埋まる</td><td><code>git diff</code> が読める</td></tr>
-      <tr><td>レビュー</td><td>実質できない</td><td>通常のコードレビュー</td></tr>
-      <tr><td>対象の形式</td><td>マクロを持てる形式のみ</td><td><code>.xlsx .pptx .docx</code> 共通</td></tr>
-      <tr><td>真実の在処</td><td>文書</td><td>ソース（ライブラリは実行時のキャッシュ）</td></tr>
-    </table>
+    <div class="vs">
+      <div class="vs-col vs-old">
+        <div class="vs-cap">埋め込みマクロ</div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>ソースの可読性</b><p>文書内の XML に埋まる</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>レビュー</b><p>実質できない</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>対象の形式</b><p>マクロを持てる形式のみ</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>真実の在処</b><p>文書</p></div></div>
+      </div>
+      <div class="vs-col vs-new">
+        <div class="vs-cap">basrun</div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>ソースの可読性</b><p><code>git diff</code> が読める</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>レビュー</b><p>通常のコードレビュー</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>対象の形式</b><p><code>.xlsx .pptx .docx</code> 共通</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>真実の在処</b><p>ソース（実行時のキャッシュ）</p></div></div>
+      </div>
+    </div>
   </div>
 </section>
 
