@@ -812,7 +812,7 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
       <h3>確認していない</h3>
       <ul>
         <li><b>Windows でしか動かしていません。</b>Linux / macOS のパス解決は書いてありますが未検証です。</li>
-        <li>検証した表は <b>1 種類だけ</b>です。結合セル・複数シート・巨大な表は試していません。</li>
+        <li><b>巨大な表</b>（数万行規模の性能・メモリ）は試していません。結合セル・複数シートは確認しましたが、スケールは別問題です。</li>
         <li>描画に使うのは <b>LibreOffice</b> です。Excel / PowerPoint の描画とは異なります。
             実測で、3-D 円グラフのラベル位置が両者で違いました。</li>
         <li>同梱している同期ツールは <b>2017 年公開で以降更新がありません。</b>
@@ -822,7 +822,10 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
       <h3>確認した</h3>
       <ul>
-        <li>テスト 21 件（単体 16 / 統合 5）。<b>単独でも、通しでも 21/21</b>
+        <li><b>結合セル・複数シートで動くこと。</b>既存の結合が処理の往復で保たれ、
+            2 枚目のシートを狙って書け、新しい結合も作れます ―
+            値だけでなく<b>描画して見た目も</b>確認しました。</li>
+        <li>テスト 22 件（単体 16 / 統合 6）。<b>単独でも、通しでも 22/22</b>
             ― 通しで走らせて初めて出た欠陥が 1 件あり、直してあります。
             LibreOffice が無い環境では統合分を飛ばします</li>
         <li>実行の前後で、利用者の既定プロファイルがバイト単位で不変であること</li>
