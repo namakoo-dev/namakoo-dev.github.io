@@ -93,6 +93,17 @@ header{position:sticky;top:0;z-index:20;background:#fff;
  * ─────────────────────────────────────────────────────────── */
 .hero{background:var(--fg);color:#fff;padding:104px 0 0;position:relative;
       overflow:hidden;isolation:isolate}
+/* ★ ヒーローだけに置く光の層。本文の裏 (方眼) は静かなままにし、
+   動きは「驚き」の場所にだけ置く。overflow:hidden がヒーロー外への
+   漏れを断つ。z-index:-1 で文字より必ず後ろ。teal と violet を別々に
+   漂わせて、同期しない緩いオーロラにする。★ 濃さは誇張気味 (.30/.26)。
+   見にくければ alpha を下げるだけでよい。動き自体は下の no-preference で。 */
+.hero::before,.hero::after{content:"";position:absolute;z-index:-1;
+  pointer-events:none;border-radius:50%;filter:blur(60px);will-change:transform}
+.hero::before{width:52%;height:130%;left:8%;top:-30%;
+  background:radial-gradient(closest-side,rgba(2,128,144,.30),transparent)}
+.hero::after{width:46%;height:130%;right:6%;top:-16%;
+  background:radial-gradient(closest-side,rgba(83,58,253,.26),transparent)}
 /* ★ 最初は左から敷いて、文章の背後を横切って読みにくくした (描画して確認)。
    文章は左にあるので、コードは右へ寄せる。空いていた右側も同時に埋まる。 */
 .hero .bgcode{position:absolute;top:0;bottom:0;right:0;width:56%;z-index:-1;
@@ -181,8 +192,17 @@ header{position:sticky;top:0;z-index:20;background:#fff;
   @keyframes fill{from{opacity:0;transform:translateY(-5px)}
                   to{opacity:1;transform:none}}
   @keyframes draw{from{opacity:0}to{opacity:1}}
+  /* ★ ヒーローの 2 つの光を、別々の周期で漂わせる。26s と 34s で割り切れないので
+     ずっと重なり方が変わり続ける (同期しない = 単調にならない)。transform だけを
+     動かすので合成側で処理され軽い。ease-in-out+alternate で端が滑らか。 */
+  .hero::before{animation:glowA 26s ease-in-out infinite alternate}
+  .hero::after{animation:glowB 34s ease-in-out infinite alternate}
+  @keyframes glowA{from{transform:translate3d(-6%,4%,0) scale(1)}
+                   to{transform:translate3d(12%,-7%,0) scale(1.18)}}
+  @keyframes glowB{from{transform:translate3d(7%,-5%,0) scale(1.12)}
+                   to{transform:translate3d(-9%,9%,0) scale(.92)}}
   /* ★ 紙に出すときは待つ相手がいない。最初から最終状態にする。 */
-  @media print{.doc .out,.tf-mid svg path{animation:none}}
+  @media print{.doc .out,.tf-mid svg path,.hero::before,.hero::after{animation:none}}
 }
 
 /* ── 見出し: 和文 + 細い罫線 + 英語副題 ───────────────────────── */
