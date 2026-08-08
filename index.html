@@ -215,10 +215,20 @@ header{position:sticky;top:0;z-index:20;background:#fff;
   /* ★ basrun 側の ✓ を、スクロールで上から順に点灯させる。JS は入れない ――
      各項目が自分の view() タイムラインで発火するので、勝手に段差がつく。
      ★ 非対応ブラウザ (Safari 等) では @supports が外れ、静的に全部見える。 */
+  /* ★ #how の accent 破線を、ロード時に 1 度だけ流す。データが通った気配。
+     既に dasharray 4 4 なので offset をずらすだけ（周期 8 の倍数で終えれば継ぎ目なし）。
+     ★ 常時は動かさない ── 動きは 1 回きり、というサイトの原則に合わせる。 */
+  .flow .ln.acc{animation:march 1.5s linear both}
+  @keyframes march{to{stroke-dashoffset:-40}}
+  /* ★ スクロールで浮かぶもの（.vs の ✓ と、各セクションのカード）。
+     各要素が自分の view() タイムラインで発火 → 上から順に段差がつく。JS 無し。 */
   @supports (animation-timeline: view()){
     .vs-new .vs-item{opacity:0;transform:translateY(8px);
       animation:vsrise linear both;animation-timeline:view();
       animation-range:entry 12% entry 58%}
+    .grid .card{opacity:0;transform:translateY(10px);
+      animation:vsrise linear both;animation-timeline:view();
+      animation-range:entry 6% entry 46%}
   }
   @keyframes vsrise{to{opacity:1;transform:none}}
   /* ★ ヒーローの 2 つの光を、別々の周期で漂わせる。26s と 34s で割り切れないので
