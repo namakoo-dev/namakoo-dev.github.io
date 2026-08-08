@@ -421,8 +421,12 @@ footer a{color:#c3d0e0}
   .link .note{flex:1 1 100%;order:3}
   /* ★ 電話でコードを横スクロールさせない。写して打つものなので折り返す。
      どこで折れたか分かるように、折り返し側だけ字下げする。 */
+  /* ★ 長いコマンドがモバイルで折り返すとき、継続行をはっきり字下げする。
+     14px（約 1 文字）では弱く、継続行が別のコマンド行に見えて「折り返しが
+     崩れている」と読めた（実機で Namakoo が指摘）。2 文字ぶん下げて、
+     「上の行の続き」だと一目で分かるようにする。 */
   pre{white-space:pre-wrap;overflow-wrap:anywhere;
-      padding-left:34px;text-indent:-14px}
+      padding-left:44px;text-indent:-24px}
   .flow--pc{display:none} .flow--sp{display:block}
   .nav{gap:16px;height:58px}
   .nav a:not(.cta){display:none}
