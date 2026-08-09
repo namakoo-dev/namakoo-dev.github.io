@@ -450,10 +450,12 @@ footer a{color:#c3d0e0}
       padding-left:44px;text-indent:-24px}
   .flow--pc{display:none} .flow--sp{display:block}
   .nav{gap:16px;height:58px}
-  /* ★ モバイルではセクション内リンク(課題/仕組み等)は隠すが、別ページへの
-     導線 .pg（開発者）は残す ── これが無いと LP から about へ行けない
-     （実機で Namakoo が指摘）。cta(使い方) と並んで右端に出る。 */
-  .nav a:not(.cta):not(.pg){display:none}
+  /* ★ モバイルではセクション内リンク(課題/仕組み等)は隠すが、次は残す:
+     - .pg（開発者）別ページ導線 ── 無いと LP → about へ行けない
+     - .brand（basrun ロゴ）★ about では brand が <a href=index.html>。これを
+       隠すと about → LP に戻れなくなる（index の brand は <span> で無関係）。
+       ロゴのタップで LP に戻すのは定石なので必ず残す（実機で Namakoo が指摘）。 */
+  .nav a:not(.cta):not(.pg):not(.brand){display:none}
   .sec{padding:64px 0}
   .hero{padding-top:64px}
 }
