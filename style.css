@@ -299,9 +299,9 @@ header{position:sticky;top:0;z-index:20;background:#fff;
  *   四角い文書だから。**主題から取る = 表計算で選択したセルの角。**
  *   面が変わっても、同じ大きさ・同じ位置・同じ色で必ず出る。
  * ─────────────────────────────────────────────────────────── */
-.card,.scene,.mat,.limits,.tf,pre{position:relative}
+.card,.scene,.mat,.limits,.tf,.profile,pre{position:relative}
 .card::before,.scene::before,.mat::before,.limits::before,.tf::before,
-pre::before{
+.profile::before,pre::before{
   content:"";position:absolute;left:6px;top:6px;width:11px;height:11px;
   border-left:1.5px solid var(--accent);border-top:1.5px solid var(--accent);
   opacity:.6;pointer-events:none}
@@ -361,6 +361,35 @@ pre .k{color:#a99bff}
 /* ── 二段組 ──────────────────────────────────────────────────── */
 .two{display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start}
 
+/* ── 開発者ページ: 物語 + 素性の一覧 ─────────────────────────────
+ * ★ about は図が無いぶん本文が左に寄り、1120px の器の右が大きく空く
+ *   (Namakoo 指摘)。右に「素性の一覧」を置いて埋める ── 飾りではなく、
+ *   採用担当・顧客が拾い読みするための硬い事実 (道具・資格・実物)。
+ *   本文は読むため、右は拾うため。値と見た目を分けたのと同じ二本立て。
+ * ─────────────────────────────────────────────────────────── */
+.about{display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:start}
+.about-body .lead{max-width:60ch}
+/* 長い本文の間ずっと空白を作らないよう、札はスクロールに追従させる。 */
+.profile{position:sticky;top:88px;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-card);padding:26px 26px 24px}
+.profile h3{margin:0 0 6px;font-size:11.5px;letter-spacing:.2em;
+  color:var(--muted);font-family:var(--font-mono);font-weight:600}
+.profile .grp{margin-top:22px}
+.profile .grp .k{margin:0 0 9px;font-size:11px;letter-spacing:.1em;
+  color:var(--accent);font-family:var(--font-mono)}
+.plist{margin:0;padding:0;list-style:none}
+.plist li{font-size:13px;color:var(--fg-2);padding:7px 0;line-height:1.55;
+  letter-spacing:.02em;border-top:1px solid var(--border)}
+.plist li:first-child{border-top:none}
+.plist li.sub{color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.chips li{border:1px solid var(--border);border-radius:var(--radius-sm);
+  padding:5px 11px;font-size:12.5px;color:var(--fg-2);letter-spacing:.02em}
+.profile .plink{display:inline-flex;align-items:center;gap:8px;
+  color:var(--accent);text-decoration:none;font-size:13.5px;font-weight:600}
+.profile .plink:hover{color:var(--accent-hover)}
+
 /* ── 対応表 ──────────────────────────────────────────────────── */
 table{width:100%;border-collapse:collapse;font-size:14px}
 th,td{text-align:left;padding:14px 12px;border-bottom:1px solid var(--border)}
@@ -393,6 +422,9 @@ footer a{color:#c3d0e0}
   .hero h1 .n{display:block}
   .grid{grid-template-columns:1fr}
   .two{grid-template-columns:1fr}
+  /* ★ about は縦に積む。本文が先、素性の札は下へ (追従は解除)。 */
+  .about{grid-template-columns:1fr;gap:34px}
+  .profile{position:static;top:auto}
   /* ★ 名前と説明が横で押し合って読めなくなった (描画して確認)。
      1 行目に名前と矢印、説明はその下へ落とす。罫線は幅が無いので出さない。 */
   /* ★ 3 列のままでは左のコードが潰れて読めない。縦に積んで矢印を回す。 */
