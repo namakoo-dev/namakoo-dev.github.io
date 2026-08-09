@@ -450,7 +450,10 @@ footer a{color:#c3d0e0}
       padding-left:44px;text-indent:-24px}
   .flow--pc{display:none} .flow--sp{display:block}
   .nav{gap:16px;height:58px}
-  .nav a:not(.cta){display:none}
+  /* ★ モバイルではセクション内リンク(課題/仕組み等)は隠すが、別ページへの
+     導線 .pg（開発者）は残す ── これが無いと LP から about へ行けない
+     （実機で Namakoo が指摘）。cta(使い方) と並んで右端に出る。 */
+  .nav a:not(.cta):not(.pg){display:none}
   .sec{padding:64px 0}
   .hero{padding-top:64px}
 }
