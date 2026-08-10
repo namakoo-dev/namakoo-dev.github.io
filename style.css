@@ -70,6 +70,11 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 .nav .cta{background:var(--accent);color:var(--accent-on);padding:9px 18px;
           border-radius:var(--radius-sm);font-weight:600}
 .nav .cta:hover{background:var(--accent-hover);color:#fff}
+/* ★ 言語トグル。日本語⇄English を右端に小さなピルで。★ モバイルでも消さない
+   （下の :not(.lang) 参照）── 英語版から日本語版へ戻れなくなる事故を防ぐ。 */
+.nav .lang{font-size:12px;color:var(--muted);border:1px solid var(--border);
+  padding:5px 11px;border-radius:999px;letter-spacing:.06em}
+.nav .lang:hover{color:var(--accent);border-color:var(--accent)}
 
 /* ── ヒーロー ─────────────────────────────────────────────────
  * 参考サイトは研究室の映像で「どういう場所か」を読む前に伝えていた。
@@ -467,7 +472,7 @@ footer a{color:#c3d0e0}
      - .brand（basrun ロゴ）★ about では brand が <a href=index.html>。これを
        隠すと about → LP に戻れなくなる（index の brand は <span> で無関係）。
        ロゴのタップで LP に戻すのは定石なので必ず残す（実機で Namakoo が指摘）。 */
-  .nav a:not(.cta):not(.pg):not(.brand){display:none}
+  .nav a:not(.cta):not(.pg):not(.brand):not(.lang){display:none}
   .sec{padding:64px 0}
   .hero{padding-top:64px}
 }
