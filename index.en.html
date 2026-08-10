@@ -154,7 +154,7 @@ total = total + u * q</pre>
     </div>
     <p class="lead">This request doesn't come together cleanly when the file you're handed is an <code>.xlsx</code>,
       because <b>an .xlsx cannot store macros by design</b> (macros live in <code>.xlsm</code>).
-      <b>It's not about whether you can write VBA — it's that there's nowhere to put what you wrote.</b>
+      <b>It's not about whether you can write VBA; it's that there's nowhere to put what you wrote.</b>
       And all three ways out mean giving something up.</p>
     <div class="grid">
       <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a1 1 0 0 1-1-1V2a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8z" /> <path d="M20 8v12a2 2 0 0 1-2 2h-4.182" /> <path d="m3.305 19.53.923-.382" /> <path d="M4 10.592V4a2 2 0 0 1 2-2h8" /> <path d="m4.228 16.852-.924-.383" /> <path d="m5.852 15.228-.383-.923" /> <path d="m5.852 20.772-.383.924" /> <path d="m8.148 15.228.383-.923" /> <path d="m8.53 21.696-.382-.924" /> <path d="m9.773 16.852.922-.383" /> <path d="m9.773 19.148.922.383" /> <circle cx="7" cy="18" r="3" /></svg><h3>Change the format</h3>
@@ -166,14 +166,14 @@ total = total + u * q</pre>
     </div>
     <p class="lead" style="margin:34px 0 0"><b>None of the three is a technical limit.</b>
       The reason it can't be done is written in the spec, so that's just where people tend to stop.
-      What's stuck is the <b>storage</b> side — not the <b>execution</b> side.</p>
+      What's stuck is the <b>storage</b> side, not the <b>execution</b> side.</p>
   </div>
 </section>
 
 <section class="sec alt" id="how">
   <div class="wrap">
     <div class="h2"><b>The limit is storage, not execution</b><span class="rule"></span><span class="en">STORAGE, NOT EXECUTION</span></div>
-    <p class="lead">It just can't be stored — <b>that doesn't mean it can't run.</b>
+    <p class="lead">It just can't be stored; <b>that doesn't mean it can't run.</b>
       Inject the source into a Basic library at runtime, and the document is processed while staying an ordinary <code>.xlsx</code>.</p>
 
     <div class="flow flow--pc">
@@ -191,7 +191,7 @@ total = total + u * q</pre>
         <rect class="box" x="16" y="36" width="252" height="100" rx="10"/>
         <text class="t" x="142" y="72" text-anchor="middle">Plain-text source</text>
         <text class="m" x="142" y="95" text-anchor="middle">src/Amount.bas</text>
-        <text class="s" x="142" y="118" text-anchor="middle">git diff readable — truth lives here</text>
+        <text class="s" x="142" y="118" text-anchor="middle">git diff readable, truth lives here</text>
 
         <path class="ln" d="M276 86 H344" marker-end="url(#a1)"/>
         <text class="lbm" x="310" y="74" text-anchor="middle">apply</text>
@@ -200,7 +200,7 @@ total = total + u * q</pre>
         <rect class="box tmp" x="354" y="36" width="252" height="100" rx="10"/>
         <text class="t" x="480" y="72" text-anchor="middle">Basic library</text>
         <text class="m" x="480" y="95" text-anchor="middle">MyLib</text>
-        <text class="s" x="480" y="118" text-anchor="middle">runtime only — gone when done</text>
+        <text class="s" x="480" y="118" text-anchor="middle">runtime only, gone when done</text>
 
         <path class="ln" d="M614 86 H682" marker-end="url(#a1)"/>
         <text class="lb"  x="648" y="106" text-anchor="middle">process</text>
@@ -212,7 +212,7 @@ total = total + u * q</pre>
 
         <path class="ln acc" d="M818 136 V200 H142 V144" marker-end="url(#a2)"/>
         <text class="lbm" x="300" y="222">pull</text>
-        <text class="lb"  x="336" y="222">— rescue macros trapped in a document back to plain text</text>
+        <text class="lb"  x="336" y="222">· rescue macros trapped in a document back to plain text</text>
       </svg>
     </div>
 
@@ -231,7 +231,7 @@ total = total + u * q</pre>
         <rect class="box" x="44" y="8" width="282" height="92" rx="10"/>
         <text class="t" x="64" y="40">Plain-text source</text>
         <text class="m" x="64" y="64">src/Amount.bas</text>
-        <text class="s" x="64" y="86">git diff readable — truth here</text>
+        <text class="s" x="64" y="86">git diff readable, truth here</text>
 
         <path class="ln" d="M185 100 V160" marker-end="url(#b1)"/>
         <text class="lbm" x="201" y="125">apply</text>
@@ -240,7 +240,7 @@ total = total + u * q</pre>
         <rect class="box tmp" x="44" y="170" width="282" height="92" rx="10"/>
         <text class="t" x="64" y="202">Basic library</text>
         <text class="m" x="64" y="226">MyLib</text>
-        <text class="s" x="64" y="248">runtime only — gone when done</text>
+        <text class="s" x="64" y="248">runtime only, gone when done</text>
 
         <path class="ln" d="M185 262 V322" marker-end="url(#b1)"/>
         <text class="lb"  x="201" y="297">process</text>
@@ -252,11 +252,11 @@ total = total + u * q</pre>
 
         <path class="ln acc" d="M185 424 V442 H26 V54 H36" marker-end="url(#b2)"/>
         <text class="lbm" x="26" y="470">pull</text>
-        <text class="lb"  x="58" y="470">— rescue trapped macros to plain text</text>
+        <text class="lb"  x="58" y="470">· rescue trapped macros to plain text</text>
       </svg>
     </div>
 
-<pre><span class="c"># The source stays plain text — never embedded in the document</span>
+<pre><span class="c"># The source stays plain text, never embedded in the document</span>
 python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup
 
 <span class="c"># You can also rescue macros trapped in a document back to plain text</span>
@@ -282,7 +282,7 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
 </section>
 
 <div class="band"><figure class="mat"><img src="assets/orders_c.jpg" alt="A monthly sheet and chart where basrun filled in the gross margins"></figure></div>
-<p class="cap">Another .xlsx — basrun filled the gross margins and % format; the chart and conditional formatting were set at generation. No Excel used.</p>
+<p class="cap">Another .xlsx: basrun filled the gross margins and % format; the chart and conditional formatting were set at generation. No Excel used.</p>
 
 <section class="sec" id="qa">
   <div class="wrap">
@@ -302,10 +302,10 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       <tr><td>Charts</td><td>the definition (XML)</td><td><b>whether it shows up at all</b></td></tr>
     </table>
     <p class="lead" style="margin-top:34px">I hit this for real. A chart's shape had
-      <b>no size written on it</b>; the chart existed but its area was zero — meaning it was
+      <b>no size written on it</b>; the chart existed but its area was zero, meaning it was
       invisible. <b>Ask, and it correctly answers “1 chart.”</b>
       A method that checks for existence will never find this. I misread the cause three times
-      running, and finally pinned it on <b>the tool's limits</b> — “this renderer doesn't support charts.”
+      running, and finally pinned it on <b>the tool's limits</b>: “this renderer doesn't support charts.”
       Wrong all three times. <b>Only by rendering could I doubt my own output.</b></p>
 
     <div class="scene" style="max-width:74ch">
@@ -314,7 +314,7 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       <ul>
         <li><b>AI can read images.</b> But <b>with no path to turn a document into an image,
           there's nothing to read in the first place.</b> A library returns the <b>specification</b>
-          of values and formatting — not the <b>result</b> of rendering.</li>
+          of values and formatting, not the <b>result</b> of rendering.</li>
         <li>So I built a path: to PDF via <code>soffice</code>, then to an image, then re-read.
           The two images in this section, and the monthly sheet above, were all <b>looked at once before being posted.</b></li>
         <li>This page itself was made the same way. Rendered at different widths, checking
@@ -324,11 +324,11 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
     <div class="two">
       <div>
         <figure class="mat"><img src="assets/worksheet_c.jpg" alt="A work instruction where basrun swapped the revision number"></figure>
-        <p class="cap" style="text-align:left;padding-left:0">.docx — basrun swapped the revision number and appended the lot count</p>
+        <p class="cap" style="text-align:left;padding-left:0">.docx: basrun swapped the revision number and appended the lot count</p>
       </div>
       <div>
         <figure class="mat"><img src="assets/pie_c.jpg" alt="A generated 3-D pie chart, rendered"></figure>
-        <p class="cap" style="text-align:left;padding-left:0">.xlsx — 3-D chart and texture. The domain you can't confirm without rendering</p>
+        <p class="cap" style="text-align:left;padding-left:0">.xlsx: 3-D chart and texture. The domain you can't confirm without rendering</p>
       </div>
     </div>
     <div class="grid" style="margin-top:40px">
@@ -353,7 +353,7 @@ python basrun.py pull rescued Standard --book legacy.ods</pre>
       <div class="card"><span class="n">02</span><h3>Apply it to a document</h3>
         <p>Injected into a library at runtime, processed, and saved. The format stays <code>.xlsx</code>.</p></div>
       <div class="card"><span class="n">03</span><h3>Render and look</h3>
-        <p>Not the “it worked” message — we confirm the result with our eyes before calling it done.</p></div>
+        <p>Not the “it worked” message; we confirm the result with our eyes before calling it done.</p></div>
     </div>
 <pre style="margin-top:34px"><span class="c">' ★ Receive the document as an argument. Don't rely on ThisComponent</span>
 Sub FillAmounts(oDoc As Object)
@@ -363,7 +363,7 @@ Sub FillAmounts(oDoc As Object)
 End Sub</pre>
     <p class="lead" style="margin-top:26px"><b><code>ThisComponent</code> won't work.</b>
       A document opened hidden with <code>--headless</code> is not the “current component.”
-      <b>It looks like it succeeded, but nothing happens</b> —
+      <b>It looks like it succeeded, but nothing happens</b>:
       in practice it printed “loaded / ran / saved” and not one cell had changed.</p>
 <pre><span class="c"># Sync, apply, and save (--backup keeps the original)</span>
 python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
@@ -383,7 +383,7 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
       <h3>Not verified</h3>
       <ul>
         <li><b>Only run on Windows.</b> Path resolution for Linux / macOS is written, but unverified.</li>
-        <li><b>Huge sheets</b> (tens of thousands of rows — performance, memory) untested. Merged cells and multiple sheets were checked, but scale is a separate matter.</li>
+        <li><b>Huge sheets</b> (tens of thousands of rows: performance, memory) untested. Merged cells and multiple sheets were checked, but scale is a separate matter.</li>
         <li>Rendering uses <b>LibreOffice</b>. It differs from Excel / PowerPoint rendering.
             In practice, a 3-D pie chart's label position differed between the two.</li>
         <li>The bundled sync tool was <b>published in 2017 with no updates since.</b>
@@ -394,10 +394,10 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
       <h3>Verified</h3>
       <ul>
         <li><b>Works with merged cells and multiple sheets.</b> Existing merges survive a processing round-trip,
-            a second sheet can be targeted for writing, and new merges can be made —
+            a second sheet can be targeted for writing, and new merges can be made,
             confirmed not just by values but <b>by rendering and looking.</b></li>
-        <li>22 tests (16 unit / 6 integration). <b>22/22 individually and end-to-end</b>
-            — one flaw only surfaced running end-to-end, and it's fixed.
+        <li>22 tests (16 unit / 6 integration). <b>22/22 individually and end-to-end</b>;
+            one flaw only surfaced running end-to-end, and it's fixed.
             On machines without LibreOffice, the integration ones are skipped.</li>
         <li>Before and after a run, the user's default profile is unchanged, byte for byte.</li>
         <li>After processing it's an ordinary <code>.xlsx</code> with no <code>vbaProject.bin</code>.</li>
@@ -414,22 +414,22 @@ python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
     <div class="h2"><b>Built on</b><span class="rule"></span><span class="en">BUILT ON</span></div>
     <a class="link" href="https://pypi.org/project/obasync/">
       <b>obasync</b>
-      <span class="note">Sync is delegated to it. By imacat / Apache-2.0 — bundled unmodified</span>
+      <span class="note">Sync is delegated to it. By imacat / Apache-2.0, bundled unmodified</span>
       <span class="rule"></span><span class="arrow">→</span></a>
     <a class="link" href="https://github.com/nexu-io/open-design">
       <b>open-design</b>
-      <span class="note">Palette and depth. Apache-2.0 — only the data is used; nothing resident is added</span>
+      <span class="note">Palette and depth. Apache-2.0. Only the data is used; nothing resident is added</span>
       <span class="rule"></span><span class="arrow">→</span></a>
     <p class="lead" style="margin:26px 0 0;font-size:13.5px;max-width:78ch">
       Anything with no reason to rewrite isn't rewritten. <b>The time goes into what only becomes possible once they're combined.</b>
-      — the <code>--book</code> option, which opens a document and rescues the macros inside it to plain text,
+      The <code>--book</code> option, which opens a document and rescues the macros inside it to plain text,
       was in neither tool on its own.</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <span><b style="color:#fff">basrun</b> — plain-text Basic runner</span>
+    <span><b style="color:#fff">basrun</b> · plain-text Basic runner</span>
     <span>No Microsoft Office / .xlsx .pptx .docx</span>
     <span>The tool and this page were written by AI, and rendered and checked by AI.</span>
   </div>
