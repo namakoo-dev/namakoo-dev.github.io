@@ -368,7 +368,11 @@ pre .k{color:#a99bff}
  *   本文は読むため、右は拾うため。値と見た目を分けたのと同じ二本立て。
  * ─────────────────────────────────────────────────────────── */
 .about{display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:start}
-.about-body .lead{max-width:60ch}
+/* ★ 本文は両端揃え。左揃えだと右端が文節ごとにギザギザで締まらない
+   （Namakoo 指摘 2026-08-10）。日本語は両端揃えが自然（本・新聞と同じ）。
+   auto-phrase（body 継承）で語は割れないまま、行末だけ揃う。最終行は
+   既定で左（text-align-last:auto）なので短い締め行が伸びない。 */
+.about-body .lead{max-width:60ch;text-align:justify}
 /* 長い本文の間ずっと空白を作らないよう、札はスクロールに追従させる。 */
 .profile{position:sticky;top:88px;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--radius-lg);
