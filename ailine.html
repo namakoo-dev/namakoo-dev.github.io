@@ -1,0 +1,177 @@
+<!doctype html>
+<!-- ★ ailine の LP。basrun(index.html) と同じ style.css・同じ構造で一貫させる。
+     lang="ja"。英語版 ailine.en.html へのトグルを nav に置く。 -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ailine — 自然言語で文書を動かし、出来上がりを検証する</title>
+<meta name="description" content="自然言語の指示を、ローカルの AI が LibreOffice のコードに翻訳して文書に適用する。Microsoft Office は不要。そして出来上がりを読み戻して、本当に変わったかを確かめる。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://watasisaikou.github.io/ailine.html">
+<meta property="og:title" content="ailine — 自然言語で文書を動かし、出来上がりを検証する">
+<meta property="og:description" content="自然言語 → ローカル AI が LibreOffice Basic を生成 → 文書に適用 → 効果を読み戻して検証。Office 不要。">
+<meta property="og:image" content="https://watasisaikou.github.io/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://watasisaikou.github.io/ailine.html">
+<link rel="alternate" hreflang="en" href="https://watasisaikou.github.io/ailine.en.html">
+<link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap" style="padding-left:28px;padding-right:28px">
+    <span class="brand">ailine<small>AI-DRIVEN DOC AUTOMATION</small></span>
+    <a href="#how">仕組み</a>
+    <a href="#demo">デモ</a>
+    <a href="#limits">確認していないこと</a>
+    <a class="pg" href="about.html">開発者</a>
+    <a class="cta" href="#use">使い方</a>
+    <a class="lang" href="ailine.en.html">English</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="en">NATURAL LANGUAGE, TURNED INTO VERIFIED DOCUMENT EDITS</p>
+    <h1>
+      <span class="w"><span>「金額で並べ替えて」と言うだけで、</span><span>Excel がその通りに動く。</span></span>
+      <span class="n"><span>自然言語で、</span><span>文書を動かす。</span></span>
+    </h1>
+    <p>自然言語の指示を、<b>ローカルの AI</b> が LibreOffice のコードに翻訳し、実際の
+       <code>.xlsx</code> に適用します。Microsoft Office は要りません。そして
+       <b>出来上がりを読み戻し、本当に変わったかを確かめて</b>から完了とします。</p>
+    <ul class="fmt">
+      <li><b>計算</b><span>数式・書式</span></li>
+      <li><b>並べ替え</b><span>ピボット</span></li>
+      <li><b>グラフ</b><span>VLOOKUP</span></li>
+    </ul>
+    <div class="hero-cta">
+      <a class="go" href="#demo">デモを見る<span aria-hidden="true"> →</span></a>
+      <a class="go ghost" href="https://github.com/watasisaikou/ailine" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/></svg>
+        GitHub<span aria-hidden="true"> ↗</span></a>
+    </div>
+    <p class="by">道具もこのページも <b>AI が書き、AI が描画して確かめました</b>。
+      <span>ailine は <a href="index.html">basrun</a> の上に立っています。</span></p>
+  </div>
+</section>
+
+<div class="band"><figure class="mat"><img src="assets/ailine-workflow.jpg" alt="自然言語の8つの指示だけで、単価の引き当て・金額計算・見出しの太字・低在庫の色付け・降順の並べ替え・罫線・列幅調整まで済んだ注文表"></figure></div>
+<p class="cap">この表は、自然言語の指示 <b>8 つ</b>だけで作りました ― 単価の引き当て（VLOOKUP）・金額の計算・見出しの太字・低在庫の色付け・降順の並べ替え・罫線・列幅。Excel は使っていません</p>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>走った ≠ できた</b><span class="rule"></span><span class="en">RAN IS NOT DONE</span></div>
+    <p class="lead">AI にコードを書かせて実行させる ―― それだけでは足りません。
+      <b>「成功しました」と表示するコードは、何もしていなくてもそう表示します。</b>
+      実際、エラーひとつ出さずに「読み込んだ / 実行した / 保存した」と表示され、
+      セルは 1 つも変わっていない、ということが起きます。</p>
+    <p class="lead">そこで ailine は、適用の<b>前後で文書を読み戻して差分を取り</b>ます。
+      値・書式・色・罫線・結合・列幅・シート・グラフ ―― 変化がゼロなら
+      <b>「何もしていない」とみなして書き直させます</b>。動いた、ではなく、
+      <b>本当に変わった</b>ことを機械で確かめてから、人に差分を見せます。</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>自然言語で頼む</h3>
+        <p>「金額で降順に並べ替えて」。ローカルの AI が LibreOffice のコードに翻訳します。</p></div>
+      <div class="card"><span class="n">02</span><h3>コピーに適用</h3>
+        <p>原本は触らず、コピーへ適用。壊しません。形式は <code>.xlsx</code> のままです。</p></div>
+      <div class="card"><span class="n">03</span><h3>効果を検証</h3>
+        <p>読み戻して差分を確認。変化ゼロなら書き直し。★ 走った ≠ できた を機械で防ぎます。</p></div>
+    </div>
+    <p class="lead" style="margin-top:34px">難しい操作（並べ替え・グラフ・ピボット・VLOOKUP）は、
+      AI に一から書かせず、<b>人が検証した部品を呼ばせます</b>。当たり率が上がり、
+      <b>「使う側は内部の名前を知らなくていい」</b>まま、確実に動きます。</p>
+  </div>
+</section>
+
+<section class="sec" id="demo">
+  <div class="wrap">
+    <div class="h2"><b>作って、見せる</b><span class="rule"></span><span class="en">SHOW, DON'T TELL</span></div>
+    <p class="lead">下の 3 枚は、すべて<b>自然言語の一言</b>から生まれ、
+      <b>描画して確かめた</b>ものです。値が正しいことと、見た目が正しいことは別なので、
+      出来上がりを目で確認しています。</p>
+    <div class="two">
+      <div>
+        <figure class="mat"><img src="assets/ailine-chart.jpg" alt="ailine が自然言語から生成した、金額の棒グラフ。タイトルと軸を見出しから自動導出している"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">「金額の棒グラフを作って」― タイトル・軸は見出しから自動。LibreOffice の本物のグラフ</p>
+      </div>
+      <div>
+        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg" alt="ailine が自然言語から作った、部門ごとの金額合計のピボットテーブル"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">「部門ごとの金額をピボットで」― 本物の DataPilot ピボット。Excel でも生きています</p>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:34px">ローカルの小さな AI（<code>qwen2.5-coder:7b</code>）でも、値・論理・書式は
+      ほぼ一発で書けます。難所は検証済みの部品で補い、<b>外部にデータは一切送りません</b>。</p>
+  </div>
+</section>
+
+<section class="sec alt" id="use">
+  <div class="wrap">
+    <div class="h2"><b>使い方</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
+    <p class="lead">必要なのは <b>ローカルの LLM（ollama）と LibreOffice</b> だけです。
+      Microsoft Office も、クラウド API も要りません。モデルは差し替えられます。</p>
+<pre><span class="c"># 自然言語 → 生成 → コピーに適用 → 効果を検証 → 差分を表示</span>
+python ailine.py run 見積.xlsx "各行の金額に 単価 × 数量 を入れて"
+
+<span class="c"># 適用せず、生成した内容を見るだけ（レビュー用）</span>
+python ailine.py run 見積.xlsx "..." --dry
+
+<span class="c"># 別のモデルに載せ替える（天井を上げたいとき）</span>
+python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
+    <p class="lead" style="margin-top:26px"><b>検証済みのヘルパ</b>が、難しい UNO 操作を引き受けます ―
+      並べ替え・グラフ・ピボット・VLOOKUP・見出しの太字。モデルは「列と向き」だけ選べばよく、
+      <code>ContainsHeader</code> のような arcane な落とし穴には触れません。</p>
+  </div>
+</section>
+
+<section class="sec" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>確認していないこと</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">確かめた範囲と、確かめていない範囲を分けて書きます。
+      聞かれてから答えるのと、先に書いておくのとでは意味が違うためです。</p>
+    <div class="limits">
+      <h3>正直な限界</h3>
+      <ul>
+        <li><b>ローカルの LLM と LibreOffice が要ります。</b>外部にデータは送りませんが、そのぶん手元の環境に依存します。</li>
+        <li><b>珍しい操作は、小さいモデルほど外します。</b>検証済みのヘルパで補いますが、載っていない操作は当たり率が落ちます。</li>
+        <li><b>フォントの太字</b>は、この LibreOffice 経路では書き出されないため、<b>openpyxl で後付け</b>しています（描画で確認済み）。</li>
+        <li><b>検証は「変化したこと」までを保証します。</b>「<b>正しいか</b>」は保証しません ― 出力の差分を人が見て判断します。道具も、必ずそう促します。</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>確認した</h3>
+      <ul>
+        <li><b>並べ替え・グラフ・ピボット・VLOOKUP・条件付き色・罫線・結合</b>が、自然言語から動くこと ― 値だけでなく<b>描画して見た目も</b>確認しました。</li>
+        <li><b>実務的な通し試験</b>（1 つの表に 8 操作を連続適用）が、値の検算と描画の両方で破綻しないこと。</li>
+        <li>原本は触らず<b>コピーに適用</b>すること。処理後も、通常の <code>.xlsx</code> であること。</li>
+        <li>テストは緑（純ロジック 21 件）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" style="padding:64px 0">
+  <div class="wrap">
+    <div class="h2"><b>基盤にしているもの</b><span class="rule"></span><span class="en">BUILT ON</span></div>
+    <a class="link" href="index.html">
+      <b>basrun</b>
+      <span class="note">実行系を委ねています ― 平文の Basic を文書に適用する土台。ailine はその上に AI と検証を載せました</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <p class="lead" style="margin:26px 0 0;font-size:13.5px;max-width:78ch">
+      重い所（headless の LibreOffice を安全に駆動する部分）は basrun が持っています。
+      ailine が足したのは、<b>自然言語からの生成</b>と、<b>効果を読み戻して検証する</b>層です。
+      ―― 組んで初めて出来ることの方に、時間を使っています。</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">ailine</b> · natural language, verified document edits</span>
+    <span><a href="index.html">basrun</a> / <a href="about.html">開発者</a> / <a href="https://github.com/watasisaikou/ailine" target="_blank" rel="noopener">GitHub</a></span>
+    <span>道具もこのページも AI が書き、AI が描画して確かめました</span>
+  </div>
+</footer>
+
+</body>
+</html>

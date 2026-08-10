@@ -1,0 +1,177 @@
+<!doctype html>
+<!-- ★ English version of ailine.html. lang="en"; same style.css/structure.
+     ★ No em-dashes in prose (anti-slop). A 日本語 toggle is always in the nav. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ailine — drive documents with natural language, and verify the result</title>
+<meta name="description" content="A natural-language instruction is turned by a local AI into LibreOffice code and applied to a real document. No Microsoft Office. Then it reads the result back and confirms it actually changed.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://watasisaikou.github.io/ailine.en.html">
+<meta property="og:title" content="ailine — drive documents with natural language, and verify the result">
+<meta property="og:description" content="Natural language, to a local LLM, to LibreOffice Basic, applied to the document, then verified by reading the result back. No Office.">
+<meta property="og:image" content="https://watasisaikou.github.io/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://watasisaikou.github.io/ailine.html">
+<link rel="alternate" hreflang="en" href="https://watasisaikou.github.io/ailine.en.html">
+<link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap" style="padding-left:28px;padding-right:28px">
+    <span class="brand">ailine<small>AI-DRIVEN DOC AUTOMATION</small></span>
+    <a href="#how">How</a>
+    <a href="#demo">Demo</a>
+    <a href="#limits">Not verified</a>
+    <a class="pg" href="about.en.html">Developer</a>
+    <a class="cta" href="#use">Get started</a>
+    <a class="lang" href="ailine.html">日本語</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="en">NATURAL LANGUAGE, TURNED INTO VERIFIED DOCUMENT EDITS</p>
+    <h1>
+      <span class="w"><span>Say “sort by amount,”</span><span>and Excel does exactly that.</span></span>
+      <span class="n"><span>Drive documents,</span><span>with words.</span></span>
+    </h1>
+    <p>A natural-language instruction is translated by a <b>local AI</b> into LibreOffice code
+       and applied to a real <code>.xlsx</code>. No Microsoft Office required. Then it
+       <b>reads the result back and confirms it actually changed</b> before calling it done.</p>
+    <ul class="fmt">
+      <li><b>Calc</b><span>formula, format</span></li>
+      <li><b>Sort</b><span>pivot</span></li>
+      <li><b>Chart</b><span>VLOOKUP</span></li>
+    </ul>
+    <div class="hero-cta">
+      <a class="go" href="#demo">See the demo<span aria-hidden="true"> →</span></a>
+      <a class="go ghost" href="https://github.com/watasisaikou/ailine" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/></svg>
+        GitHub<span aria-hidden="true"> ↗</span></a>
+    </div>
+    <p class="by">The tool and this page were both <b>written by AI, then rendered and checked by AI</b>.
+      <span>ailine stands on <a href="index.en.html">basrun</a>.</span></p>
+  </div>
+</section>
+
+<div class="band"><figure class="mat"><img src="assets/ailine-workflow.jpg" alt="An order sheet where eight plain-language instructions filled in unit prices, computed amounts, bolded the header, colored low stock, sorted descending, added borders, and fit the columns"></figure></div>
+<p class="cap">This table was built from just <b>8 plain-language instructions</b>: look up the unit prices (VLOOKUP), compute the amounts, bold the header, color the low stock, sort descending, add borders, fit the columns. No Excel used.</p>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>Ran is not done</b><span class="rule"></span><span class="en">RAN IS NOT DONE</span></div>
+    <p class="lead">Having an AI write and run code is not enough on its own.
+      <b>Code that prints “it worked” prints it even when it did nothing.</b>
+      In practice it prints “loaded / ran / saved” without a single error, and not one cell has changed.</p>
+    <p class="lead">So ailine <b>reads the document back before and after, and diffs it</b>.
+      Values, formatting, colors, borders, merges, column widths, sheets, charts:
+      if nothing changed, it <b>treats that as “did nothing” and rewrites</b>.
+      Not “it ran,” but <b>it actually changed</b>, confirmed by machine, and only then is the diff shown to a human.</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>Ask in plain language</h3>
+        <p>“Sort by amount, descending.” The local AI translates it into LibreOffice code.</p></div>
+      <div class="card"><span class="n">02</span><h3>Apply to a copy</h3>
+        <p>The original is untouched; a copy is edited. The format stays <code>.xlsx</code>.</p></div>
+      <div class="card"><span class="n">03</span><h3>Verify the effect</h3>
+        <p>Read back and diff. If nothing changed, rewrite. Ran is not done, caught by machine.</p></div>
+    </div>
+    <p class="lead" style="margin-top:34px">Arcane operations (sorting, charts, pivots, VLOOKUP) are not written from scratch.
+      The model <b>calls verified building blocks</b> instead. Accuracy goes up, and
+      <b>the user never needs to know the internal names</b>.</p>
+  </div>
+</section>
+
+<section class="sec" id="demo">
+  <div class="wrap">
+    <div class="h2"><b>Show, don't tell</b><span class="rule"></span><span class="en">SHOW, DON'T TELL</span></div>
+    <p class="lead">The images below were all made from <b>a single plain-language instruction</b>,
+      then <b>rendered and looked at</b>. A value being correct and how it looks being correct are
+      two different things, so the result is confirmed with our eyes.</p>
+    <div class="two">
+      <div>
+        <figure class="mat"><img src="assets/ailine-chart.jpg" alt="A bar chart of amounts that ailine generated from natural language, with title and axis derived from the headers"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">“Make a bar chart of the amounts.” Title and axis derived from the headers. A real LibreOffice chart.</p>
+      </div>
+      <div>
+        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg" alt="A pivot table of amount totals by department that ailine built from natural language"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">“Pivot the amounts by department.” A real DataPilot pivot. It stays live in Excel too.</p>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:34px">Even a small local model (<code>qwen2.5-coder:7b</code>) writes values, logic, and formatting
+      almost first-try. The hard parts are covered by verified building blocks, and
+      <b>no data ever leaves your machine</b>.</p>
+  </div>
+</section>
+
+<section class="sec alt" id="use">
+  <div class="wrap">
+    <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
+    <p class="lead">All you need is a <b>local LLM (ollama) and LibreOffice</b>.
+      No Microsoft Office, no cloud API. The model is swappable.</p>
+<pre><span class="c"># natural language, generate, apply to a copy, verify the effect, show the diff</span>
+python ailine.py run quote.xlsx "put amount = unit price x quantity in each row"
+
+<span class="c"># generate and show only, without applying (for review)</span>
+python ailine.py run quote.xlsx "..." --dry
+
+<span class="c"># swap in another model (to raise the ceiling)</span>
+python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
+    <p class="lead" style="margin-top:26px"><b>Verified helpers</b> take on the hard UNO operations:
+      sorting, charts, pivots, VLOOKUP, bolding a header. The model only picks “which column and which way,”
+      and never touches arcane pitfalls like <code>ContainsHeader</code>.</p>
+  </div>
+</section>
+
+<section class="sec" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>What is not verified</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">I write down what I've checked and what I haven't, separately.
+      Answering when asked, and writing it up front, do not mean the same thing.</p>
+    <div class="limits">
+      <h3>Honest limits</h3>
+      <ul>
+        <li><b>A local LLM and LibreOffice are required.</b> No data is sent out, but in exchange it depends on your own machine.</li>
+        <li><b>Rare operations are missed more by smaller models.</b> Verified helpers cover them, but anything not covered has a lower hit rate.</li>
+        <li><b>Font bold</b> is not exported through this LibreOffice path, so it is <b>applied afterward with openpyxl</b> (confirmed by rendering).</li>
+        <li><b>Verification guarantees that something changed.</b> It does not guarantee it is <b>correct</b>: the output diff is judged by a human, and the tool always prompts for that.</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>Verified</h3>
+      <ul>
+        <li><b>Sorting, charts, pivots, VLOOKUP, conditional color, borders, merges</b> work from natural language, confirmed not just by values but <b>by rendering and looking</b>.</li>
+        <li>A <b>realistic end-to-end run</b> (eight operations applied in a row to one table) holds up under both value checks and rendering.</li>
+        <li>The original is untouched; a <b>copy is edited</b>. After processing it is an ordinary <code>.xlsx</code>.</li>
+        <li>Tests are green (21 pure-logic). This page too was rendered at different widths to check layout and wrapping.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" style="padding:64px 0">
+  <div class="wrap">
+    <div class="h2"><b>Built on</b><span class="rule"></span><span class="en">BUILT ON</span></div>
+    <a class="link" href="index.en.html">
+      <b>basrun</b>
+      <span class="note">The execution layer is delegated to it: the base that applies plain-text Basic to documents. ailine adds AI and verification on top.</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <p class="lead" style="margin:26px 0 0;font-size:13.5px;max-width:78ch">
+      The heavy part (driving a headless LibreOffice safely) belongs to basrun.
+      What ailine adds is <b>generation from natural language</b> and the layer that
+      <b>reads the result back and verifies it</b>. The time goes into what only becomes possible once they're combined.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">ailine</b> · natural language, verified document edits</span>
+    <span><a href="index.en.html">basrun</a> / <a href="about.en.html">Developer</a> / <a href="https://github.com/watasisaikou/ailine" target="_blank" rel="noopener">GitHub</a></span>
+    <span>The tool and this page were written by AI, and rendered and checked by AI.</span>
+  </div>
+</footer>
+
+</body>
+</html>
