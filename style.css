@@ -368,11 +368,12 @@ pre .k{color:#a99bff}
  *   本文は読むため、右は拾うため。値と見た目を分けたのと同じ二本立て。
  * ─────────────────────────────────────────────────────────── */
 .about{display:grid;grid-template-columns:1.55fr 1fr;gap:52px;align-items:start}
-/* ★ 本文は両端揃え。左揃えだと右端が文節ごとにギザギザで締まらない
-   （Namakoo 指摘 2026-08-10）。日本語は両端揃えが自然（本・新聞と同じ）。
-   auto-phrase（body 継承）で語は割れないまま、行末だけ揃う。最終行は
-   既定で左（text-align-last:auto）なので短い締め行が伸びない。 */
-.about-body .lead{max-width:60ch;text-align:justify}
+/* ★ 本文は左揃え + text-wrap:balance。両端揃え(justify)は日本語だと短い行を
+   一律に引き伸ばして字間が間延びし不自然さが際立った（Namakoo 判断 2026-08-10、
+   実機で justify を却下）。balance は行長を均して右端のギザギザを緩めつつ、
+   字間は自然なまま（引き伸ばさない）。auto-phrase（body 継承）で語も割れない。
+   非対応ブラウザ（古い Safari 等）は素の左揃えに劣化＝progressive enhancement。 */
+.about-body .lead{max-width:60ch;text-wrap:balance}
 /* 長い本文の間ずっと空白を作らないよう、札はスクロールに追従させる。 */
 .profile{position:sticky;top:88px;background:var(--surface);
   border:1px solid var(--border);border-radius:var(--radius-lg);
