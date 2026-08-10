@@ -1,0 +1,439 @@
+<!doctype html>
+<!-- ★ English version of index.html (basrun LP). lang="en"; structure/CSS/SVG
+     geometry mirror the Japanese page. A 日本語 toggle is always in the nav. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>basrun — run plain-text Basic against documents that can't store macros</title>
+<meta name="description" content="Process .xlsx / .pptx / .docx by machine without Microsoft Office. Keep the source as plain text in git, and inject it into a library at runtime.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://watasisaikou.github.io/index.en.html">
+<meta property="og:title" content="basrun — run plain-text Basic against documents that can't store macros">
+<meta property="og:description" content="Process .xlsx / .pptx / .docx without Office. Keep the source plain in git, inject into a library at runtime.">
+<meta property="og:image" content="https://watasisaikou.github.io/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://watasisaikou.github.io/">
+<link rel="alternate" hreflang="en" href="https://watasisaikou.github.io/index.en.html">
+<link rel="stylesheet" href="style.css?v=6">
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap" style="padding-left:28px;padding-right:28px">
+    <span class="brand">basrun<small>PLAIN BASIC RUNNER</small></span>
+    <a href="#problem">Problem</a>
+    <a href="#how">How</a>
+    <a href="#qa">Visual QA</a>
+    <a href="#limits">Not verified</a>
+    <a class="pg" href="about.en.html">Developer</a>
+    <a class="cta" href="#use">Get started</a>
+    <a class="lang" href="index.html">日本語</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <pre class="bgcode" aria-hidden="true">Option VBASupport 1
+Option Explicit
+
+&#x27; Quote: unit price x qty, and the total
+Sub FillQuote(oDoc As Object)
+    Dim oSheet As Object, i As Long, total As Double
+    oSheet = oDoc.Sheets.getByIndex(0)
+    For i = 5 To 9
+        Dim u As Double, q As Double
+        u = oSheet.getCellByPosition(2, i).getValue()
+        q = oSheet.getCellByPosition(3, i).getValue()
+        oSheet.getCellByPosition(4, i).setValue(u * q)
+        total = total + u * q
+    Next i
+    oSheet.getCellByPosition(4, 10).setValue(total)
+End Sub
+
+&#x27; Order: gross margin = (amount - cost) / amount; format here too
+Sub FillMargin(oDoc As Object)
+    Dim oSheet As Object, i As Long
+    Dim oFmts As Object, nFmt As Long
+    Dim aLoc As New com.sun.star.lang.Locale
+    oSheet = oDoc.Sheets.getByIndex(0)
+    oFmts = oDoc.getNumberFormats()
+    nFmt = oFmts.queryKey(&quot;0.0%&quot;, aLoc, False)
+    If nFmt = -1 Then nFmt = oFmts.addNew(&quot;0.0%&quot;, aLoc)
+    For i = 4 To 8
+        Dim s As Double, c As Double
+        s = oSheet.getCellByPosition(2, i).getValue()
+        c = oSheet.getCellByPosition(3, i).getValue()
+        If s &gt; 0 Then oSheet.getCellByPosition(4, i).setValue((s - c) / s)
+    Next i
+    oSheet.getCellRangeByPosition(4, 4, 4, 8).NumberFormat = nFmt
+End Sub
+</pre>
+  <div class="wrap">
+    <p class="en">PLAIN-TEXT BASIC, RUN AGAINST DOCUMENTS THAT CANNOT STORE MACROS</p>
+    <h1>
+      <span class="w"><span>Documents that can't store macros,</span><span>run with plain-text Basic.</span></span>
+      <span class="n"><span>Without Office,</span><span>drive your documents.</span></span>
+    </h1>
+    <p>No Microsoft Office required. The document's format stays as-is; only the contents
+       are processed by machine. The source is plain text, so diffs are readable.</p>
+    <ul class="fmt">
+      <li><b>.xlsx</b><span>compute</span></li>
+      <li><b>.pptx</b><span>swap</span></li>
+      <li><b>.docx</b><span>rewrite</span></li>
+    </ul>
+    <div class="hero-cta">
+      <a class="go" href="#use">Get started<span aria-hidden="true"> →</span></a>
+      <a class="go ghost" href="https://github.com/watasisaikou/basrun" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/></svg>
+        GitHub<span aria-hidden="true"> ↗</span></a>
+    </div>
+    <p class="by">The tool and this page were both <b>written by AI, then rendered and checked by AI</b>.
+      <span>The evidence is in <a href="#qa">Visual QA</a> and <a href="#limits">What is not verified</a>.</span></p>
+  </div>
+  <div class="shot">
+    <div class="tf">
+      <div>
+        <span class="tag">Amount.bas <em>plain text, kept in git</em></span>
+<pre>u = oSheet.getCellByPosition(2, i).getValue()
+q = oSheet.getCellByPosition(3, i).getValue()
+<b>oSheet.getCellByPosition(4, i).setValue(u * q)</b>
+total = total + u * q</pre>
+      </div>
+      <div class="tf-mid">
+        <span>basrun apply</span>
+        <svg viewBox="0 0 100 12" aria-hidden="true" preserveAspectRatio="none">
+          <defs><marker id="ha" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker></defs>
+          <path d="M0 6 H92" marker-end="url(#ha)"/>
+          <path class="pulse" d="M0 6 H92"/>
+        </svg>
+      </div>
+      <div>
+        <span class="tag">quote.xlsx <em>no macros inside</em></span>
+        <table class="doc">
+          <tr><td style="width:44%"><i class="bar" style="width:88%"></i></td>
+              <td class="num">1,280</td><td class="num">40</td>
+              <td class="out">51,200</td></tr>
+          <tr><td><i class="bar" style="width:66%"></i></td>
+              <td class="num">340</td><td class="num">120</td>
+              <td class="out">40,800</td></tr>
+          <tr><td><i class="bar" style="width:78%"></i></td>
+              <td class="num">95</td><td class="num">500</td>
+              <td class="out">47,500</td></tr>
+          <tr><td><i class="bar" style="width:58%"></i></td>
+              <td class="num">8,600</td><td class="num">6</td>
+              <td class="out">51,600</td></tr>
+          <tr><td><i class="bar" style="width:72%"></i></td>
+              <td class="num">720</td><td class="num">80</td>
+              <td class="out">57,600</td></tr>
+          <tr><td>Total</td><td class="num"></td><td class="num"></td>
+              <td class="out">248,700</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="sec" id="problem">
+  <div class="wrap">
+    <div class="h2"><b>Where it gets stuck</b><span class="rule"></span><span class="en">THE CONSTRAINT</span></div>
+    <p class="lead" style="margin-bottom:22px">For example, a situation like this.</p>
+    <div class="scene">
+      <p class="q">“Fill in the amounts and total on this quote by end of day.<br>
+        It arrives in the same format every month, so from next month on too.”</p>
+      <ul>
+        <li>What you're handed is an <code>.xlsx</code>. <b>Not a single byte of macro inside.</b></li>
+        <li>The machine in front of you has <b>no Microsoft Office.</b></li>
+        <li>You can't change their workflow. <b>The format must be returned as-is.</b></li>
+        <li>The same task <b>comes again next month.</b> A one-off by hand won't end it.</li>
+      </ul>
+    </div>
+    <p class="lead">This request doesn't come together cleanly when the file you're handed is an <code>.xlsx</code>,
+      because <b>an .xlsx cannot store macros by design</b> (macros live in <code>.xlsm</code>).
+      <b>It's not about whether you can write VBA — it's that there's nowhere to put what you wrote.</b>
+      And all three ways out mean giving something up.</p>
+    <div class="grid">
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 8a1 1 0 0 1-1-1V2a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8z" /> <path d="M20 8v12a2 2 0 0 1-2 2h-4.182" /> <path d="m3.305 19.53.923-.382" /> <path d="M4 10.592V4a2 2 0 0 1 2-2h8" /> <path d="m4.228 16.852-.924-.383" /> <path d="m5.852 15.228-.383-.923" /> <path d="m5.852 20.772-.383.924" /> <path d="m8.148 15.228.383-.923" /> <path d="m8.53 21.696-.382-.924" /> <path d="m9.773 16.852.922-.383" /> <path d="m9.773 19.148.922.383" /> <circle cx="7" cy="18" r="3" /></svg><h3>Change the format</h3>
+        <p>Convert to .xlsm. That changes their workflow, and often isn't accepted.</p></div>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.659 22H18a2 2 0 0 0 2-2V8a2.4 2.4 0 0 0-.706-1.706l-3.588-3.588A2.4 2.4 0 0 0 14 2H6a2 2 0 0 0-2 2v9.34" /> <path d="M14 2v5a1 1 0 0 0 1 1h5" /> <path d="M10.378 12.622a1 1 0 0 1 3 3.003L8.36 20.637a2 2 0 0 1-.854.506l-2.867.837a.5.5 0 0 1-.62-.62l.836-2.869a2 2 0 0 1 .506-.853z" /></svg><h3>Write the values directly</h3>
+        <p>Fill in just the results. Can't re-run, no formulas left. If the numbers change, redo it.</p></div>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <line x1="9" x2="15" y1="15" y2="9" /></svg><h3>Give up</h3>
+        <p>Back to doing it by hand. Time grows with the sheet count and the months. Next month, the same.</p></div>
+    </div>
+    <p class="lead" style="margin:34px 0 0"><b>None of the three is a technical limit.</b>
+      The reason it can't be done is written in the spec, so that's just where people tend to stop.
+      What's stuck is the <b>storage</b> side — not the <b>execution</b> side.</p>
+  </div>
+</section>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>The limit is storage, not execution</b><span class="rule"></span><span class="en">STORAGE, NOT EXECUTION</span></div>
+    <p class="lead">It just can't be stored — <b>that doesn't mean it can't run.</b>
+      Inject the source into a Basic library at runtime, and the document is processed while staying an ordinary <code>.xlsx</code>.</p>
+
+    <div class="flow flow--pc">
+      <svg viewBox="0 0 960 250" role="img"
+           aria-label="Plain .bas is injected into a Basic library at runtime and processes an .xlsx that cannot store macros. Conversely, pull rescues macros trapped in a document back to plain text.">
+        <defs>
+          <marker id="a1" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+          <marker id="a2" class="acc" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+        </defs>
+
+        <rect class="box" x="16" y="36" width="252" height="100" rx="10"/>
+        <text class="t" x="142" y="72" text-anchor="middle">Plain-text source</text>
+        <text class="m" x="142" y="95" text-anchor="middle">src/Amount.bas</text>
+        <text class="s" x="142" y="118" text-anchor="middle">git diff readable — truth lives here</text>
+
+        <path class="ln" d="M276 86 H344" marker-end="url(#a1)"/>
+        <text class="lbm" x="310" y="74" text-anchor="middle">apply</text>
+        <text class="lb"  x="310" y="106" text-anchor="middle">inject</text>
+
+        <rect class="box tmp" x="354" y="36" width="252" height="100" rx="10"/>
+        <text class="t" x="480" y="72" text-anchor="middle">Basic library</text>
+        <text class="m" x="480" y="95" text-anchor="middle">MyLib</text>
+        <text class="s" x="480" y="118" text-anchor="middle">runtime only — gone when done</text>
+
+        <path class="ln" d="M614 86 H682" marker-end="url(#a1)"/>
+        <text class="lb"  x="648" y="106" text-anchor="middle">process</text>
+
+        <rect class="box" x="692" y="36" width="252" height="100" rx="10"/>
+        <text class="t" x="818" y="72" text-anchor="middle">Document</text>
+        <text class="m" x="818" y="95" text-anchor="middle">book.xlsx</text>
+        <text class="s" x="818" y="118" text-anchor="middle">no source embedded</text>
+
+        <path class="ln acc" d="M818 136 V200 H142 V144" marker-end="url(#a2)"/>
+        <text class="lbm" x="300" y="222">pull</text>
+        <text class="lb"  x="336" y="222">— rescue macros trapped in a document back to plain text</text>
+      </svg>
+    </div>
+
+    <div class="flow flow--sp">
+      <svg viewBox="0 0 340 486" role="img"
+           aria-label="Plain .bas is injected into a Basic library at runtime and processes an .xlsx that cannot store macros.">
+        <defs>
+          <marker id="b1" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+          <marker id="b2" class="acc" viewBox="0 0 10 10" refX="9" refY="5"
+                  markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z"/></marker>
+        </defs>
+
+        <rect class="box" x="44" y="8" width="282" height="92" rx="10"/>
+        <text class="t" x="64" y="40">Plain-text source</text>
+        <text class="m" x="64" y="64">src/Amount.bas</text>
+        <text class="s" x="64" y="86">git diff readable — truth here</text>
+
+        <path class="ln" d="M185 100 V160" marker-end="url(#b1)"/>
+        <text class="lbm" x="201" y="125">apply</text>
+        <text class="lb"  x="201" y="143">inject</text>
+
+        <rect class="box tmp" x="44" y="170" width="282" height="92" rx="10"/>
+        <text class="t" x="64" y="202">Basic library</text>
+        <text class="m" x="64" y="226">MyLib</text>
+        <text class="s" x="64" y="248">runtime only — gone when done</text>
+
+        <path class="ln" d="M185 262 V322" marker-end="url(#b1)"/>
+        <text class="lb"  x="201" y="297">process</text>
+
+        <rect class="box" x="44" y="332" width="282" height="92" rx="10"/>
+        <text class="t" x="64" y="364">Document</text>
+        <text class="m" x="64" y="388">book.xlsx</text>
+        <text class="s" x="64" y="410">no source embedded</text>
+
+        <path class="ln acc" d="M185 424 V442 H26 V54 H36" marker-end="url(#b2)"/>
+        <text class="lbm" x="26" y="470">pull</text>
+        <text class="lb"  x="58" y="470">— rescue trapped macros to plain text</text>
+      </svg>
+    </div>
+
+<pre><span class="c"># The source stays plain text — never embedded in the document</span>
+python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup
+
+<span class="c"># You can also rescue macros trapped in a document back to plain text</span>
+python basrun.py pull rescued Standard --book legacy.ods</pre>
+    <p class="lead" style="margin-top:34px">The long way around turns out to be the better shape.</p>
+    <div class="vs">
+      <div class="vs-col vs-old">
+        <div class="vs-cap">Embedded macros</div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>Source readability</b><p>buried in the document's XML</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>Review</b><p>effectively impossible</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>Target formats</b><p>only formats that can hold macros</p></div></div>
+        <div class="vs-item"><span class="mk">✗</span><div><b>Where truth lives</b><p>the document</p></div></div>
+      </div>
+      <div class="vs-col vs-new">
+        <div class="vs-cap">basrun</div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>Source readability</b><p><code>git diff</code> is readable</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>Review</b><p>ordinary code review</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>Target formats</b><p><code>.xlsx .pptx .docx</code> alike</p></div></div>
+        <div class="vs-item"><span class="mk">✓</span><div><b>Where truth lives</b><p>the source (library is a runtime cache)</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="band"><figure class="mat"><img src="assets/orders_c.jpg" alt="A monthly sheet and chart where basrun filled in the gross margins"></figure></div>
+<p class="cap">Another .xlsx — basrun filled the gross margins and % format; the chart and conditional formatting were set at generation. No Excel used.</p>
+
+<section class="sec" id="qa">
+  <div class="wrap">
+    <div class="h2"><b>Build it, then look</b><span class="rule"></span><span class="en">RENDER, THEN LOOK</span></div>
+    <p class="lead">A string being correct and the result being readable are two different things.
+      <b>Code that prints “it worked” prints it even when it didn't.</b>
+      So we render the result and confirm it with our eyes before calling it done.</p>
+
+    <p class="lead">Values alone can be read by dumping to CSV. But the moment it becomes CSV,
+      <b>merged cells, column widths, and sheet structure</b> are lost. The coordinates survive as numbers,
+      but <b>how it looks does not</b>. A chart has no textual form at all,
+      so there's no way to confirm by re-reading whether it was drawn.</p>
+    <table>
+      <tr><th></th><th>Readable as text</th><th>Only visible when rendered</th></tr>
+      <tr><td>Cells</td><td>values, formulas, coordinates</td><td>how a merge looks, text cut by column width</td></tr>
+      <tr><td>Formatting</td><td>the rules you set</td><td>the color those rules actually produced</td></tr>
+      <tr><td>Charts</td><td>the definition (XML)</td><td><b>whether it shows up at all</b></td></tr>
+    </table>
+    <p class="lead" style="margin-top:34px">I hit this for real. A chart's shape had
+      <b>no size written on it</b>; the chart existed but its area was zero — meaning it was
+      invisible. <b>Ask, and it correctly answers “1 chart.”</b>
+      A method that checks for existence will never find this. I misread the cause three times
+      running, and finally pinned it on <b>the tool's limits</b> — “this renderer doesn't support charts.”
+      Wrong all three times. <b>Only by rendering could I doubt my own output.</b></p>
+
+    <div class="scene" style="max-width:74ch">
+      <p class="q">basrun, and this page too, were written by AI.<br>
+        And the flaw above was found by that same AI, rendering and looking.</p>
+      <ul>
+        <li><b>AI can read images.</b> But <b>with no path to turn a document into an image,
+          there's nothing to read in the first place.</b> A library returns the <b>specification</b>
+          of values and formatting — not the <b>result</b> of rendering.</li>
+        <li>So I built a path: to PDF via <code>soffice</code>, then to an image, then re-read.
+          The two images in this section, and the monthly sheet above, were all <b>looked at once before being posted.</b></li>
+        <li>This page itself was made the same way. Rendered at different widths, checking
+          <b>heading wraps, missing pieces of diagrams, and contrast between ground and text.</b></li>
+      </ul>
+    </div>
+    <div class="two">
+      <div>
+        <figure class="mat"><img src="assets/worksheet_c.jpg" alt="A work instruction where basrun swapped the revision number"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">.docx — basrun swapped the revision number and appended the lot count</p>
+      </div>
+      <div>
+        <figure class="mat"><img src="assets/pie_c.jpg" alt="A generated 3-D pie chart, rendered"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">.xlsx — 3-D chart and texture. The domain you can't confirm without rendering</p>
+      </div>
+    </div>
+    <div class="grid" style="margin-top:40px">
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16-3 3 3 3" /> <path d="M3 12h14.5a1 1 0 0 1 0 7H13" /> <path d="M3 19h6" /> <path d="M3 5h18" /></svg><h3>A title wraps to two lines</h3>
+        <p>Perfectly correct as a string. A flaw re-reading will never surface.</p></div>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /> <path d="M12 18a6 6 0 0 0 0-12v12z" /></svg><h3>Dark text on a dark panel</h3>
+        <p>Mapped the design-system colors by name and dropped the role of the panel it sat on.</p></div>
+      <div class="card"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2" /> <path d="M3 9h18" /></svg><h3>The bottom third is blank</h3>
+        <p>Designed by width and never used the vertical dimension. Numerically a correct layout.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" id="use">
+  <div class="wrap">
+    <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
+    <p class="lead">All you need is <b>LibreOffice</b>. No Microsoft Office required.
+      For Python, use the one bundled with LibreOffice (plain Python has no <code>uno</code> module).</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>Write a Sub</h3>
+        <p>The source is a plain <code>.bas</code>. Never embedded in the document, so it lives in git as-is.</p></div>
+      <div class="card"><span class="n">02</span><h3>Apply it to a document</h3>
+        <p>Injected into a library at runtime, processed, and saved. The format stays <code>.xlsx</code>.</p></div>
+      <div class="card"><span class="n">03</span><h3>Render and look</h3>
+        <p>Not the “it worked” message — we confirm the result with our eyes before calling it done.</p></div>
+    </div>
+<pre style="margin-top:34px"><span class="c">' ★ Receive the document as an argument. Don't rely on ThisComponent</span>
+Sub FillAmounts(oDoc As Object)
+    Dim oSheet As Object
+    oSheet = oDoc.Sheets.getByIndex(0)
+    ...
+End Sub</pre>
+    <p class="lead" style="margin-top:26px"><b><code>ThisComponent</code> won't work.</b>
+      A document opened hidden with <code>--headless</code> is not the “current component.”
+      <b>It looks like it succeeded, but nothing happens</b> —
+      in practice it printed “loaded / ran / saved” and not one cell had changed.</p>
+<pre><span class="c"># Sync, apply, and save (--backup keeps the original)</span>
+python basrun.py apply book.xlsx src MyLib Amount.FillAmounts --backup</pre>
+    <p class="lead" style="margin-top:26px">The LibreOffice it launches is <b>isolated in a dedicated profile</b>,
+      so it doesn't disturb any LibreOffice you have open on screen. To stop it, it ends
+      <b>only the instance it connected to</b>, not via <code>taskkill</code>.
+      Override with <code>BASRUN_OFFICE</code> / <code>BASRUN_PROFILE</code> / <code>BASRUN_PORT</code>.</p>
+  </div>
+</section>
+
+<section class="sec" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>What is not verified</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">I write down what I've checked and what I haven't, separately.
+      Answering when asked, and writing it up front, do not mean the same thing.</p>
+    <div class="limits">
+      <h3>Not verified</h3>
+      <ul>
+        <li><b>Only run on Windows.</b> Path resolution for Linux / macOS is written, but unverified.</li>
+        <li><b>Huge sheets</b> (tens of thousands of rows — performance, memory) untested. Merged cells and multiple sheets were checked, but scale is a separate matter.</li>
+        <li>Rendering uses <b>LibreOffice</b>. It differs from Excel / PowerPoint rendering.
+            In practice, a 3-D pie chart's label position differed between the two.</li>
+        <li>The bundled sync tool was <b>published in 2017 with no updates since.</b>
+            It's confirmed to work on current LibreOffice, but future compatibility isn't guaranteed.</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>Verified</h3>
+      <ul>
+        <li><b>Works with merged cells and multiple sheets.</b> Existing merges survive a processing round-trip,
+            a second sheet can be targeted for writing, and new merges can be made —
+            confirmed not just by values but <b>by rendering and looking.</b></li>
+        <li>22 tests (16 unit / 6 integration). <b>22/22 individually and end-to-end</b>
+            — one flaw only surfaced running end-to-end, and it's fixed.
+            On machines without LibreOffice, the integration ones are skipped.</li>
+        <li>Before and after a run, the user's default profile is unchanged, byte for byte.</li>
+        <li>After processing it's an ordinary <code>.xlsx</code> with no <code>vbaProject.bin</code>.</li>
+        <li>Results are confirmed by <b>re-reading with a different implementation</b>, not the one used to generate them.</li>
+        <li>This page too was rendered at 1280 / 390 / 360 and checked. Ground-to-text contrast was
+            <b>measured by reading pixels</b> (8.2 : 1 at worst), and outbound network requests were <b>zero</b>.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" style="padding:64px 0">
+  <div class="wrap">
+    <div class="h2"><b>Built on</b><span class="rule"></span><span class="en">BUILT ON</span></div>
+    <a class="link" href="https://pypi.org/project/obasync/">
+      <b>obasync</b>
+      <span class="note">Sync is delegated to it. By imacat / Apache-2.0 — bundled unmodified</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <a class="link" href="https://github.com/nexu-io/open-design">
+      <b>open-design</b>
+      <span class="note">Palette and depth. Apache-2.0 — only the data is used; nothing resident is added</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <p class="lead" style="margin:26px 0 0;font-size:13.5px;max-width:78ch">
+      Anything with no reason to rewrite isn't rewritten. <b>The time goes into what only becomes possible once they're combined.</b>
+      — the <code>--book</code> option, which opens a document and rescues the macros inside it to plain text,
+      was in neither tool on its own.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">basrun</b> — plain-text Basic runner</span>
+    <span>No Microsoft Office / .xlsx .pptx .docx</span>
+    <span>The tool and this page were written by AI, and rendered and checked by AI.</span>
+  </div>
+</footer>
+
+</body>
+</html>
