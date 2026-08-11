@@ -97,8 +97,8 @@
         <p class="cap" style="text-align:left;padding-left:0">「金額の棒グラフを作って」― タイトル・軸は見出しから自動。LibreOffice の本物のグラフ</p>
       </div>
       <div>
-        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg" alt="ailine が自然言語から作った、部門ごとの金額合計のピボットテーブル"></figure>
-        <p class="cap" style="text-align:left;padding-left:0">「部門ごとの金額をピボットで」― 本物の DataPilot ピボット。Excel でも生きています</p>
+        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg?v=2" alt="ailine が自然言語から作った、部門ごとに金額を集計した表（格子罫線・カンマ・合計行つき）"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">「部門ごとの金額を集計表に」― 罫線・カンマ・合計まで整えた表。本物のピボット(DataPilot)も生成できます</p>
       </div>
     </div>
     <p class="lead" style="margin-top:34px">ローカルの小さな AI（<code>qwen2.5-coder:7b</code>）でも、値・論理・書式は
@@ -135,17 +135,17 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
       <ul>
         <li><b>ローカルの LLM と LibreOffice が要ります。</b>外部にデータは送りませんが、そのぶん手元の環境に依存します。</li>
         <li><b>珍しい操作は、小さいモデルほど外します。</b>検証済みのヘルパで補いますが、載っていない操作は当たり率が落ちます。</li>
-        <li><b>フォントの太字</b>は、この LibreOffice 経路では書き出されないため、<b>openpyxl で後付け</b>しています（描画で確認済み）。</li>
         <li><b>検証は「変化したこと」までを保証します。</b>「<b>正しいか</b>」は保証しません ― 出力の差分を人が見て判断します。道具も、必ずそう促します。</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
       <h3>確認した</h3>
       <ul>
-        <li><b>並べ替え・グラフ・ピボット・VLOOKUP・条件付き色・罫線・結合</b>が、自然言語から動くこと ― 値だけでなく<b>描画して見た目も</b>確認しました。</li>
+        <li><b>並べ替え・グラフ・集計表・ピボット・VLOOKUP・条件付き色・罫線・結合・中央揃え・太字</b>が、自然言語から動くこと ― 値だけでなく<b>描画して見た目も</b>確認しました。</li>
+        <li><b>太字は native で書き出せます</b>（日本語は <code>CharWeightAsian</code> が要る点を実測で押さえました）。数値も壊れません。</li>
         <li><b>実務的な通し試験</b>（1 つの表に 8 操作を連続適用）が、値の検算と描画の両方で破綻しないこと。</li>
         <li>原本は触らず<b>コピーに適用</b>すること。処理後も、通常の <code>.xlsx</code> であること。</li>
-        <li>テストは緑（純ロジック 21 件）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
+        <li>テストは緑（純ロジック 20 件）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
       </ul>
     </div>
   </div>

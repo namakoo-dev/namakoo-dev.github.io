@@ -96,8 +96,8 @@
         <p class="cap" style="text-align:left;padding-left:0">“Make a bar chart of the amounts.” Title and axis derived from the headers. A real LibreOffice chart.</p>
       </div>
       <div>
-        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg" alt="A pivot table of amount totals by department that ailine built from natural language"></figure>
-        <p class="cap" style="text-align:left;padding-left:0">“Pivot the amounts by department.” A real DataPilot pivot. It stays live in Excel too.</p>
+        <figure class="mat" style="max-width:420px"><img src="assets/ailine-pivot.jpg?v=2" alt="A department-by-amount summary table that ailine built from natural language, with borders, commas and a total row"></figure>
+        <p class="cap" style="text-align:left;padding-left:0">“Summarize the amounts by department.” A clean table with borders, commas and a total. It can also generate a real DataPilot pivot.</p>
       </div>
     </div>
     <p class="lead" style="margin-top:34px">Even a small local model (<code>qwen2.5-coder:7b</code>) writes values, logic, and formatting
@@ -135,17 +135,17 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
       <ul>
         <li><b>A local LLM and LibreOffice are required.</b> No data is sent out, but in exchange it depends on your own machine.</li>
         <li><b>Rare operations are missed more by smaller models.</b> Verified helpers cover them, but anything not covered has a lower hit rate.</li>
-        <li><b>Font bold</b> is not exported through this LibreOffice path, so it is <b>applied afterward with openpyxl</b> (confirmed by rendering).</li>
         <li><b>Verification guarantees that something changed.</b> It does not guarantee it is <b>correct</b>: the output diff is judged by a human, and the tool always prompts for that.</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
       <h3>Verified</h3>
       <ul>
-        <li><b>Sorting, charts, pivots, VLOOKUP, conditional color, borders, merges</b> work from natural language, confirmed not just by values but <b>by rendering and looking</b>.</li>
+        <li><b>Sorting, charts, summary tables, pivots, VLOOKUP, conditional color, borders, merges, centering, bold</b> work from natural language, confirmed not just by values but <b>by rendering and looking</b>.</li>
+        <li><b>Bold is written natively</b> (Japanese bold needs <code>CharWeightAsian</code>, pinned down by measurement). Numbers are not corrupted.</li>
         <li>A <b>realistic end-to-end run</b> (eight operations applied in a row to one table) holds up under both value checks and rendering.</li>
         <li>The original is untouched; a <b>copy is edited</b>. After processing it is an ordinary <code>.xlsx</code>.</li>
-        <li>Tests are green (21 pure-logic). This page too was rendered at different widths to check layout and wrapping.</li>
+        <li>Tests are green (20 pure-logic). This page too was rendered at different widths to check layout and wrapping.</li>
       </ul>
     </div>
   </div>
