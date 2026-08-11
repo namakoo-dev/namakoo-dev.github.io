@@ -477,10 +477,10 @@ footer a{color:#c3d0e0}
   .nav a,.nav .lang{white-space:nowrap}
   .brand small{display:none}
   /* ★ モバイルではセクション内リンク(課題/仕組み等)は隠すが、次は残す:
-     - .pg（開発者）別ページ導線 ── 無いと LP → about へ行けない
-     - .brand（basrun ロゴ）★ about では brand が <a href=index.html>。これを
-       隠すと about → LP に戻れなくなる（index の brand は <span> で無関係）。
-       ロゴのタップで LP に戻すのは定石なので必ず残す（実機で Namakoo が指摘）。 */
+     - .pg（basrun / ailine / 開発者）★ ページ間の相互リンク。全ページに [basrun ailine]
+       の対があり、about もこの対でホーム(basrun)へ戻れる（旧: about ロゴが index リンク
+       だったが、basrun 名の重複を嫌って brand は Namakoo に変更・非リンク span 化）。
+     - .brand（各ページの識別子。index=basrun / ailine=ailine / about=Namakoo）は残す。 */
   .nav a:not(.cta):not(.pg):not(.brand):not(.lang){display:none}
   .sec{padding:64px 0}
   .hero{padding-top:64px}
