@@ -65,17 +65,8 @@ header{position:sticky;top:0;z-index:20;background:#fff;
 .brand{font-weight:700;letter-spacing:.06em;font-size:17px;margin-right:auto}
 .brand small{display:block;font-weight:400;font-size:10px;color:var(--muted);
              letter-spacing:.18em}
-.nav a{text-decoration:none;font-size:13.5px;color:var(--fg-2);letter-spacing:.04em;
-  position:relative;overflow:hidden}
+.nav a{text-decoration:none;font-size:13.5px;color:var(--fg-2);letter-spacing:.04em}
 .nav a:hover{color:var(--accent)}
-/* ★ クリック/タップの波紋（Material 風 ripple）。押した位置から円が広がって消える。
-   nav.js が押下位置に .ripple を挿す。色は currentColor で各要素に馴染む
-   （紫の CTA には白、文字リンクには濃色）。pill は overflow:hidden で形にクリップ。 */
-.nav a:not(.cta):not(.lang){padding:8px 0}   /* 文字リンクにも波紋の縦の余地（横は不変=モバイル安全） */
-.nav .ripple{position:absolute;border-radius:50%;background:currentColor;opacity:.26;
-  transform:scale(0);pointer-events:none;animation:nav-ripple .55s ease-out forwards}
-@keyframes nav-ripple{to{transform:scale(1);opacity:0}}
-@media (prefers-reduced-motion:reduce){.nav .ripple{display:none}}
 .nav .cta{background:var(--accent);color:var(--accent-on);padding:9px 18px;
           border-radius:var(--radius-sm);font-weight:600}
 .nav .cta:hover{background:var(--accent-hover);color:#fff}
@@ -494,3 +485,16 @@ footer a{color:#c3d0e0}
   .sec{padding:64px 0}
   .hero{padding-top:64px}
 }
+
+/* ★ ページ全体のクリック波紋（cursor ripple）。ripple.js が押下位置(clientX/Y)に
+   .click-ripple を1枚挿す。位置は固定(スクロールに追従しない)・クリックを邪魔しない。
+   小さな円が広がって消える。色は accent。動きを抑えたい人には出さない。 */
+.click-ripple{position:fixed;width:14px;height:14px;border-radius:50%;
+  background:var(--accent);pointer-events:none;z-index:2147483647;
+  transform:translate(-50%,-50%) scale(1);
+  animation:click-ripple .6s ease-out forwards}
+@keyframes click-ripple{
+  from{transform:translate(-50%,-50%) scale(1);opacity:.35}
+  to{transform:translate(-50%,-50%) scale(7);opacity:0}
+}
+@media (prefers-reduced-motion:reduce){.click-ripple{display:none}}
