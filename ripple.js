@@ -6,9 +6,9 @@ document.addEventListener('pointerdown', function (e) {
   s.className = 'click-ripple';
   s.style.left = e.clientX + 'px';
   s.style.top = e.clientY + 'px';
-  // ★ 速さをクリックごとにランダムに（0.4〜0.6秒）。0.6s=最も遅い(上限)、0.4s=最速。
-  //    CSS の .6s をインラインで上書きする。単調にならず、少し軽快になる。
-  s.style.animationDuration = (0.4 + Math.random() * 0.2).toFixed(3) + 's';
+  // ★ 速さをクリックごとにランダムに（0.3〜0.5秒）。0.5s=最も遅い(上限)、0.3s=最速。
+  //    CSS の .6s をインラインで上書きする。単調にならず、軽快になる。
+  s.style.animationDuration = (0.3 + Math.random() * 0.2).toFixed(3) + 's';
   document.body.appendChild(s);
   s.addEventListener('animationend', function () { s.remove(); });
 });
