@@ -60,10 +60,11 @@ a{color:inherit}
    ぼかしだけでは隠れないので不透明にする。 */
 header{position:sticky;top:0;z-index:20;background:#fff;
        border-bottom:1px solid var(--border)}
-/* ★ ヘッダーは全幅に広げる（コンテンツは 1120px 中央寄せのまま）。brand が左端、
-   nav リンクが右端に張り出して「広がり」を出す。左右は 44px でエッジに余白。 */
+/* ★ ヘッダーは全幅に広げる（コンテンツは 1120px 中央寄せのまま）。brand が左寄り、
+   nav リンクが右端に張り出して「広がり」を出す。★ 左パディングを右より大きく取り、
+   brand をエッジから少し内側に置く（nav 位置は右 44px のまま不変）。 */
 .nav{max-width:none;margin:0 auto;display:flex;align-items:center;
-     gap:32px;padding:0 44px;height:64px}
+     gap:32px;padding:0 44px 0 80px;height:64px}
 .brand{font-weight:700;letter-spacing:.06em;font-size:17px;margin-right:auto}
 .brand small{display:block;font-weight:400;font-size:10px;color:var(--muted);
              letter-spacing:.18em}
