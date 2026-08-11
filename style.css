@@ -436,6 +436,9 @@ td code{font-family:var(--font-mono);font-size:12.5px;color:var(--accent)}
 footer{background:var(--fg);color:#8fa3bd;padding:52px 0;font-size:12.5px}
 footer .wrap{display:flex;gap:24px;flex-wrap:wrap;align-items:center}
 footer a{color:#c3d0e0}
+/* ★ コピーライト。flex-basis:100% で独立した最終行にして左下に置く。控えめに。 */
+footer .copy{flex-basis:100%;order:99;margin-top:6px;color:#5f7290;
+  font-size:11.5px;letter-spacing:.04em}
 
 @media(max-width:820px){
   .hero h1 .w{display:none}
