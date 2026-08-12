@@ -478,10 +478,9 @@ footer .copy{flex-basis:100%;order:99;margin-top:6px;color:#5f7290;
   /* ★ モバイルは nav 項目が多い(brand+相互リンク+開発者+CTA+言語=5要素)。英語は
      ラベルが長く(Developer/Get started)1行に収まらないので、2行に折り返す:
      brand を1行目に占有させ、リンク群を2行目へ。どのラベル幅でも破綻しない。
-     ★ 各項目は内部で改行させない(pill が縦に潰れる事故を防ぐ)。左右余白の inline は上書き。 */
-  .nav{flex-wrap:wrap;height:auto;gap:10px 14px;
-       padding-top:10px !important;padding-bottom:10px !important;
-       padding-left:16px !important;padding-right:16px !important}
+     ★ 各項目は内部で改行させない(pill が縦に潰れる事故を防ぐ)。余白は基底 .nav の
+     0 44px 0 80px をモバイル向けに上書き(このブロックが後勝ちなので !important 不要)。 */
+  .nav{flex-wrap:wrap;height:auto;gap:10px 14px;padding:10px 16px}
   .nav .brand{width:100%;margin-right:0}
   .nav a,.nav .lang{white-space:nowrap}
   .brand small{display:none}
