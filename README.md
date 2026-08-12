@@ -1,8 +1,8 @@
-# watasisaikou.github.io
+# namakoo-dev.github.io
 
-**[basrun](https://github.com/watasisaikou/basrun) / [ailine](https://github.com/watasisaikou/ailine) のランディングページと、開発者（Namakoo）の紹介ページ。**
+**[basrun](https://github.com/namakoo-dev/basrun) / [ailine](https://github.com/namakoo-dev/ailine) のランディングページと、開発者（Namakoo）の紹介ページ。**
 
-公開先: **https://watasisaikou.github.io/**
+公開先: **https://namakoo-dev.github.io/**
 
 | ページ | 内容 |
 |---|---|
@@ -20,7 +20,7 @@
   ナビの言語トグルで双方向に行き来できる。
 - **AI が書き、AI が描画して確かめた。** コードは AI アシスタント（Nagi）が書き、
   変更のたびに実ブラウザで描画して崩れを検査してから push している
-  （検査道具は [tools](https://github.com/watasisaikou/tools) の `qa.py`）。
+  （検査道具は [tools](https://github.com/namakoo-dev/tools) の `qa.py`）。
   commit の著者名もその立て付けのまま（`git log` は `Nagi <nagi@stg.local>`）。
 - `make_og.py` は OG 画像（`assets/og.jpg`）を作り直すためのローカル用スクリプト。
   サイトの配信には関与しない。
