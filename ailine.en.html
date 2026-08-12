@@ -153,7 +153,33 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
   </div>
 </section>
 
-<section class="sec alt" style="padding:64px 0">
+<section class="sec alt" id="vs">
+  <div class="wrap">
+    <div class="h2"><b>How this differs from Microsoft 365 Copilot</b><span class="rule"></span><span class="en">A DIFFERENT FIELD</span></div>
+    <p class="lead">Excel in 2026 ships with Copilot Agent Mode. If you have Microsoft 365, a Copilot
+      license, and data that may go to the cloud, it is a strong option. ailine answers the same
+      question, driving documents with natural language, under <b>the opposite constraints</b>:
+      for desks where the data must stay on the machine.</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>Where inference runs</h3>
+        <p>Copilot reasons with cloud models. ailine runs on <b>a local LLM only</b> and
+           <b>sends nothing out</b>. Once set up, it <b>runs without any network at all</b>,
+           so it works on air-gapped desks and wherever policy says data must not leave the machine.</p></div>
+      <div class="card"><span class="n">02</span><h3>What it assumes</h3>
+        <p>Copilot assumes Microsoft 365 plus a Copilot license. ailine runs on
+           <b>LibreOffice and ollama, both free of charge</b>: no Office, no subscription,
+           and <b>no license fees at all</b>. Adoption starts at zero cost.</p></div>
+      <div class="card"><span class="n">03</span><h3>Which direction it checks</h3>
+        <p>Copilot shows a plan <b>before</b> it acts and highlights its edits. ailine reads the result
+           back <b>after</b> it acts and <b>verifies, by machine, that the document really changed</b>.
+           Planning ahead and verifying after are different things.</p></div>
+    </div>
+    <p class="lead" style="margin-top:26px">This is not about which one is better.
+      <b>They hold different fields.</b> ailine's field is the desk that cannot reach the cloud.</p>
+  </div>
+</section>
+
+<section class="sec" style="padding:64px 0">
   <div class="wrap">
     <div class="h2"><b>Built on</b><span class="rule"></span><span class="en">BUILT ON</span></div>
     <a class="link" href="index.en.html">

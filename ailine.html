@@ -153,7 +153,31 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
   </div>
 </section>
 
-<section class="sec alt" style="padding:64px 0">
+<section class="sec alt" id="vs">
+  <div class="wrap">
+    <div class="h2"><b>Microsoft 365 Copilot との違い</b><span class="rule"></span><span class="en">A DIFFERENT FIELD</span></div>
+    <!-- ★ 「MS Office からの逃げ」に読ませない骨格: 冒頭で Copilot を正面から認める →
+         「同じ問いを逆側の制約で解いた」→ 優劣でなく守備範囲。Copilot の「できない」は
+         一切書かず、両者の「する」だけを並べる (claim-audit: 全行が公表事実)。 -->
+    <p class="lead">2026 年の Excel には Copilot の Agent Mode があります。Microsoft 365 と Copilot
+      ライセンスがあり、データをクラウドに出せる環境なら、あれは強力な選択肢です。ailine は同じ「自然言語で文書を動かす」という問いを、<b>逆側の制約</b>で解いています ──
+      データを機械の外に出せない現場のために。</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>推論の場所</h3>
+        <p>Copilot はクラウドのモデルで推論します。ailine は<b>ローカルの LLM だけ</b>で動き、
+           文書も指示も<b>外部に送信しません</b>。一度セットアップすれば<b>ネットワークの無い環境でも動く</b>ので、データを外に出せない規程の現場や<b>閉域網</b>でも使えます。</p></div>
+      <div class="card"><span class="n">02</span><h3>前提コスト</h3>
+        <p>Copilot は Microsoft 365 と Copilot ライセンスが前提です。ailine が使う
+           <b>LibreOffice と ollama はどちらも無償</b> ── Office もサブスクリプションも<b>ライセンス料も一切要りません</b>。導入の稟議が「ゼロ円」から始められます。</p></div>
+      <div class="card"><span class="n">03</span><h3>確かめる向き</h3>
+        <p>Copilot は実行<b>前</b>に計画を示し、編集箇所を強調表示します。ailine は実行<b>後</b>に出来上がりを読み戻し、<b>本当に変わったかを機械で検証</b>します。事前の計画と事後の検証は、別のものです。</p></div>
+    </div>
+    <p class="lead" style="margin-top:26px">どちらが優れているか、ではありません。<b>守備範囲が違います。</b>
+      ailine の持ち場は、クラウドに出せない机の上です。</p>
+  </div>
+</section>
+
+<section class="sec" style="padding:64px 0">
   <div class="wrap">
     <div class="h2"><b>基盤にしているもの</b><span class="rule"></span><span class="en">BUILT ON</span></div>
     <a class="link" href="index.html">
