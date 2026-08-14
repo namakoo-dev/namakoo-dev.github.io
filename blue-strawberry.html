@@ -1,0 +1,186 @@
+<!doctype html>
+<!-- ★ blue-strawberry の LP。basrun(index.html)/ailine(ailine.html) と同じ style.css・
+     同じ構造・同じトーン(誇張なし・実測数字・正直な限界開示)で一貫させる。
+     lang="ja"。英語版 blue-strawberry.en.html へのトグルを nav に置く。 -->
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>blue-strawberry — Claude Code の transcript を検索し、系譜を辿る</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23533afd'/%3E%3Ctext x='32' y='46' font-size='40' font-weight='700' font-family='Arial,Helvetica,sans-serif' fill='%23ffffff' text-anchor='middle'%3Eb%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Claude Code の transcript 検索・記憶グラフ・系譜トレースを 1 ファイルで行う、stdlib のみの Python CLI。コンテキスト圧縮の後もディスクに残る transcript を、3 層で低負荷に思い出す。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://namakoo-dev.github.io/blue-strawberry.html">
+<meta property="og:title" content="blue-strawberry — Claude Code の transcript を検索し、系譜を辿る">
+<meta property="og:description" content="transcript 検索 + 記憶グラフ + 系譜トレース。1 ファイル・stdlib only・MIT。テスト 71 本、CI は ubuntu/windows で緑。">
+<meta property="og:image" content="https://namakoo-dev.github.io/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://namakoo-dev.github.io/blue-strawberry.html">
+<link rel="alternate" hreflang="en" href="https://namakoo-dev.github.io/blue-strawberry.en.html">
+<link rel="stylesheet" href="style.css?v=14">
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap">
+    <span class="brand">blue-strawberry<small>RECALL FOR CLAUDE CODE</small></span>
+    <a href="#how">仕組み</a>
+    <a href="#lineage">系譜</a>
+    <a href="#limits">確認していないこと</a>
+    <a class="pg" href="index.html">basrun</a>
+    <a class="pg" href="ailine.html">ailine</a>
+    <a class="pg" href="about.html">開発者</a>
+    <a class="cta" href="#use">使ってみる</a>
+    <a class="lang" href="blue-strawberry.en.html">English</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="en">TRANSCRIPT SEARCH, MEMORY GRAPH, VERIFIED LINEAGE</p>
+    <h1>
+      <span class="w"><span>要約でウィンドウから消えても、</span><span>transcript はディスクに全部残っている。</span></span>
+      <span class="n"><span>要約でウィンドウから消えても、</span><span>transcript はディスクに全部残っている。</span></span>
+    </h1>
+    <p>blue-strawberry は、<b>Claude Code の transcript 検索・記憶グラフ・系譜トレース</b>を
+       1 ファイルで行う CLI です。<code>stdlib</code> だけで動き、依存ライブラリはゼロ。
+       コンテキスト圧縮で会話がウィンドウから消えたあとも、ディスクの transcript は消えていません。</p>
+    <ul class="fmt">
+      <li><b>検索</b><span>list/search/show</span></li>
+      <li><b>記憶</b><span>check/suggest</span></li>
+      <li><b>系譜</b><span>lineage/backlinks</span></li>
+    </ul>
+    <div class="hero-cta">
+      <a class="go" href="#how">仕組みを見る<span aria-hidden="true"> →</span></a>
+      <a class="go ghost" href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/></svg>
+        GitHub<span aria-hidden="true"> ↗</span></a>
+    </div>
+    <p class="by">道具もこのページも <b>AI が書き、AI が検査しました</b>。
+      <span>テストは 71 本、CI は ubuntu と windows の両方で緑です。</span></p>
+  </div>
+</section>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>3 層で、低負荷に思い出す</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
+    <p class="lead">Claude Code は会話をまるごと <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>
+      に残します。コンテキスト圧縮で古いやり取りが表示ウィンドウから落ちたあとも、
+      ディスクの transcript は消えません。ただし毎回全文を読み直すのは高くつくので、
+      blue-strawberry は<b>3 層</b>で思い出します。</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>索引 1 行</h3>
+        <p><code>MEMORY.md</code> の一行(名前 + 一言の説明)をまず見る。ここまでは軽い。</p></div>
+      <div class="card"><span class="n">02</span><h3>記憶ノート</h3>
+        <p>該当したら、そのノートの本文(front matter・系譜)を開く。</p></div>
+      <div class="card"><span class="n">03</span><h3>逐語</h3>
+        <p>系譜のアンカーから、transcript の実際の発言を <code>--deep</code> で読み戻す。</p></div>
+    </div>
+    <p class="lead" style="margin-top:34px">索引 → 記憶ノート → 逐語 の順に開くので、
+      思い出すたびに transcript 全体を読み直す必要はありません。</p>
+  </div>
+</section>
+
+<section class="sec" id="lineage">
+  <div class="wrap">
+    <div class="h2"><b>考えの由来を、機械で確かめる</b><span class="rule"></span><span class="en">VERIFIED LINEAGE</span></div>
+    <p class="lead"><code>系譜:</code> 行は、検証済みの時系列アンカーです。8 桁のセッション prefix と
+      時刻を持ち、対象の transcript にその時刻が実在するかを<b>±3 分の窓</b>で機械が検査します。
+      番人(<code>check</code>)はこれに加えて、dead link・索引ずれ・アンカーの陳腐化も毎回検査します。</p>
+<pre><span class="c"># 番人。同梱のサンプルデータで今すぐ試せる</span>
+python recall.py --projects-dir sample/projects check
+
+<span class="c"># 矛盾ゼロならこう出る</span>
+dead=0 orphan=0 missing=0 ghost=0 stale=0
+
+<span class="c"># 特定の系譜を辿る(--deep で当時の発言そのものを引用)</span>
+python recall.py --projects-dir sample/projects lineage node_review --deep</pre>
+    <p class="lead" style="margin-top:26px">「セッション prefix が transcript のどこにも無い」
+      「アンカーの時刻が ±3 分以内に見つからない(セッションが分岐・継続してアンカーだけ
+      古いまま残った)」といった不整合は ERROR として <code>check</code> の終了コードを 1 にします。
+      WARN のみなら 0 のままです。</p>
+  </div>
+</section>
+
+<section class="sec alt" id="use">
+  <div class="wrap">
+    <div class="h2"><b>使ってみる</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
+    <p class="lead">必要なのは <b>Python 3.9+</b> だけです。依存ライブラリはゼロ、外部 API も
+      呼びません。合成のサンプルデータが同梱されているので、実データが無くても今すぐ試せます。</p>
+<pre><span class="c"># 導入</span>
+git clone https://github.com/namakoo-dev/blue-strawberry.git
+cd blue-strawberry
+python recall.py --help
+
+<span class="c"># 同梱サンプルで、実データ無しにすぐ試す</span>
+python recall.py --projects-dir sample/projects search "notification"
+python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
+    <p class="lead" style="margin-top:26px">テストは<b>71 本</b>。<code>pytest -q</code> が
+      GitHub Actions で <b>ubuntu と windows</b> の両方に通っています。記憶レイヤー(<code>check</code> /
+      <code>lineage</code> など)は <code>memory/</code> が見つからない場合、そのことを言って
+      終了コード 2 で止まります ― 無いデータをあるふりはしません。transcript の検索・一覧・表示だけなら、
+      その制約なしに動きます。</p>
+  </div>
+</section>
+
+<section class="sec" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>確認していないこと</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">確かめた範囲と、確かめていない範囲を分けて書きます。</p>
+    <div class="limits">
+      <h3>正直な限界</h3>
+      <ul>
+        <li><b>JSONL は非公開の内部形式です。</b>Claude Code は transcript のフォーマットを公開していません
+          ― 観測した構造(圧縮イベントの raw-byte 一致を含む)に合わせているだけなので、更新で壊れる
+          可能性があります。合成フィクスチャでテストしているので、壊れた場合の多くはサイレントな誤答でなく
+          テストの失敗として出るはずです。ただし把握している形についてのみです。</li>
+        <li><b>実データでの検証は一台・一人分です。</b>数百 MB・Windows・日本語 + 英語という一台の実データと、
+          合成データで開発しました。Linux/macOS は CI 上の合成データのみで検査しています。</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>確認した</h3>
+      <ul>
+        <li><b>テスト 71 本</b>が、transcript のパース・全サブコマンド・記憶グラフの検査・パス自動検出・
+          同梱サンプルのエンドツーエンドをカバーし、実データ無しで緑です。</li>
+        <li><b>CI は ubuntu と windows の両方で緑</b>(GitHub Actions)。</li>
+        <li>同梱の合成サンプルで<b>全コマンドが実データ無しに動く</b>こと ―
+          <code>check</code> が <code>dead=0 orphan=0 missing=0 ghost=0 stale=0</code> を報告し、
+          自分自身の整合性を実演しています。</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" style="padding:64px 0">
+  <div class="wrap">
+    <div class="h2"><b>名前の由来</b><span class="rule"></span><span class="en">WHY "BLUE STRAWBERRY"</span></div>
+    <p class="lead">「青いイチゴを描いて」「イチゴは青くないので描けません」。この二行目は誤りで、
+      誤り方に意味があります。検証が向いていたのは「青いイチゴが自然に存在するか」という
+      間違った命題でした。問うべきは、手持ちの部品 ― イチゴの形・青という色・描く力 ―
+      を新しく束ねられるかどうかで、束ねられました。blue-strawberry も同じ動きです。
+      transcript がディスクに残ること、Markdown のノートに wikilink を張れること、
+      全文検索が既にあること。新しい能力は要らず、束ねればよいと気づくことが要りました。</p>
+    <a class="link" href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">
+      <b>README で詳しく読む</b>
+      <span class="note">寓話の全文・設計ノート・正直な限界</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <a class="link" href="https://dev.to/namakoo/the-day-my-agent-started-having-hunches-f7o" target="_blank" rel="noopener" style="margin-top:14px">
+      <b>dev.to で開発物語を読む（英語）</b>
+      <span class="note">The Day My Agent Started Having Hunches — 実測と失敗込みの記録</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">blue-strawberry</b> · transcript search, memory graph, verified lineage</span>
+    <span><a href="index.html">basrun</a> / <a href="ailine.html">ailine</a> / <a href="about.html">開発者</a> / <a href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">GitHub</a></span>
+    <span>道具もこのページも AI が書き、AI が検査しました</span>
+    <span class="copy">&copy; 2026 Namakoo</span>
+  </div>
+</footer>
+
+<script src="ripple.js?v=3" defer></script>
+</body>
+</html>

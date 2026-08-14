@@ -1,0 +1,191 @@
+<!doctype html>
+<!-- ★ English version of blue-strawberry.html. lang="en"; same style.css/structure.
+     ★ No em-dashes in prose (anti-slop). A 日本語 toggle is always in the nav. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>blue-strawberry — search Claude Code transcripts and trace where an idea came from</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23533afd'/%3E%3Ctext x='32' y='46' font-size='40' font-weight='700' font-family='Arial,Helvetica,sans-serif' fill='%23ffffff' text-anchor='middle'%3Eb%3C/text%3E%3C/svg%3E">
+<meta name="description" content="A single-file, stdlib-only Python CLI for searching Claude Code transcripts, a memory graph, and verified lineage tracing. Transcripts stay on disk after context compaction; three layers recall them cheaply.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://namakoo-dev.github.io/blue-strawberry.en.html">
+<meta property="og:title" content="blue-strawberry — search Claude Code transcripts and trace where an idea came from">
+<meta property="og:description" content="Transcript search, memory graph, verified lineage. One file, stdlib only, MIT. 71 tests, CI green on ubuntu and windows.">
+<meta property="og:image" content="https://namakoo-dev.github.io/assets/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://namakoo-dev.github.io/blue-strawberry.html">
+<link rel="alternate" hreflang="en" href="https://namakoo-dev.github.io/blue-strawberry.en.html">
+<link rel="stylesheet" href="style.css?v=14">
+</head>
+<body>
+
+<header>
+  <nav class="nav wrap">
+    <span class="brand">blue-strawberry<small>RECALL FOR CLAUDE CODE</small></span>
+    <a href="#how">How</a>
+    <a href="#lineage">Lineage</a>
+    <a href="#limits">Not verified</a>
+    <a class="pg" href="index.en.html">basrun</a>
+    <a class="pg" href="ailine.en.html">ailine</a>
+    <a class="pg" href="about.en.html">Developer</a>
+    <a class="cta" href="#use">Get started</a>
+    <a class="lang" href="blue-strawberry.html">日本語</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <p class="en">TRANSCRIPT SEARCH, MEMORY GRAPH, VERIFIED LINEAGE</p>
+    <h1>
+      <span class="w"><span>Compaction drops it from the window,</span> <span>but the transcript is still on disk.</span></span>
+      <span class="n"><span>Compaction drops it from the window,</span> <span>but the transcript is still on disk.</span></span>
+    </h1>
+    <p>blue-strawberry is a single-file CLI for <b>searching Claude Code transcripts, a memory
+       graph, and lineage tracing</b>. It runs on <code>stdlib</code> alone, no dependencies.
+       When a conversation falls out of the visible window after context compaction, the
+       transcript on disk is still there.</p>
+    <ul class="fmt">
+      <li><b>Search</b><span>list/search/show</span></li>
+      <li><b>Memory</b><span>check/suggest</span></li>
+      <li><b>Lineage</b><span>lineage/backlinks</span></li>
+    </ul>
+    <div class="hero-cta">
+      <a class="go" href="#how">See how it works<span aria-hidden="true"> →</span></a>
+      <a class="go ghost" href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58v-2.03c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.84 2.81 1.31 3.5 1 .11-.78.42-1.31.76-1.61-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6.01 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.66.24 2.88.12 3.18.77.84 1.24 1.91 1.24 3.22 0 4.61-2.81 5.63-5.49 5.93.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58C20.56 22.3 24 17.8 24 12.5 24 5.87 18.63.5 12 .5z"/></svg>
+        GitHub<span aria-hidden="true"> ↗</span></a>
+    </div>
+    <p class="by">The tool and this page were both <b>written by AI, then checked by AI</b>.
+      <span>71 tests, CI green on both ubuntu and windows.</span></p>
+  </div>
+</section>
+
+<section class="sec alt" id="how">
+  <div class="wrap">
+    <div class="h2"><b>Three layers, low cost per recall</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
+    <p class="lead">Claude Code persists every conversation to
+      <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>. Even after context
+      compaction drops old turns from the visible window, the transcript on disk is untouched.
+      Reading it all back every time would be expensive, so blue-strawberry recalls in
+      <b>three layers</b>.</p>
+    <div class="grid">
+      <div class="card"><span class="n">01</span><h3>One index line</h3>
+        <p>Check the one line in <code>MEMORY.md</code> (name plus a short description) first. Cheap.</p></div>
+      <div class="card"><span class="n">02</span><h3>Memory note</h3>
+        <p>If it matches, open that note's body (frontmatter, lineage).</p></div>
+      <div class="card"><span class="n">03</span><h3>Verbatim</h3>
+        <p>From a lineage anchor, read the actual transcript text back with <code>--deep</code>.</p></div>
+    </div>
+    <p class="lead" style="margin-top:34px">Index, then note, then verbatim: recalling something
+      never requires reading the whole transcript back from scratch.</p>
+  </div>
+</section>
+
+<section class="sec" id="lineage">
+  <div class="wrap">
+    <div class="h2"><b>Where an idea came from, checked by machine</b><span class="rule"></span><span class="en">VERIFIED LINEAGE</span></div>
+    <p class="lead">A <code>系譜:</code> ("lineage") line is a verified, time-ordered anchor.
+      It carries an 8-character session prefix and a timestamp, and a machine check confirms that
+      timestamp actually exists in the target transcript, within a <b>±3 minute window</b>. The
+      guardian (<code>check</code>) also inspects dead links, index drift, and stale anchors, every run.</p>
+<pre><span class="c"># The guardian. Try it now with the bundled sample data</span>
+python recall.py --projects-dir sample/projects check
+
+<span class="c"># A clean graph prints this</span>
+dead=0 orphan=0 missing=0 ghost=0 stale=0
+
+<span class="c"># Walk one lineage chain (--deep quotes the actual words said at the time)</span>
+python recall.py --projects-dir sample/projects lineage node_review --deep</pre>
+    <p class="lead" style="margin-top:26px">A session prefix that matches no transcript at all, or
+      an anchor timestamp that resolves to nothing within ±3 minutes (usually a session that
+      forked or continued into a new file while the anchor was left pointing at the old one), is
+      an ERROR that sets <code>check</code>'s exit code to 1. WARN-only runs stay at 0.</p>
+  </div>
+</section>
+
+<section class="sec alt" id="use">
+  <div class="wrap">
+    <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
+    <p class="lead">All it needs is <b>Python 3.9+</b>. No dependencies, no external API calls. A
+      synthetic sample dataset ships with it, so there is something to try even without real data.</p>
+<pre><span class="c"># install</span>
+git clone https://github.com/namakoo-dev/blue-strawberry.git
+cd blue-strawberry
+python recall.py --help
+
+<span class="c"># try it now, with the bundled sample, no real data needed</span>
+python recall.py --projects-dir sample/projects search "notification"
+python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
+    <p class="lead" style="margin-top:26px"><b>71 tests</b>. <code>pytest -q</code> runs green on
+      GitHub Actions for both <b>ubuntu and windows</b>. The memory layer (<code>check</code>,
+      <code>lineage</code>, and the rest) stops with exit code 2 and says so plainly when no
+      <code>memory/</code> directory is found; it does not pretend to have data it does not have.
+      Transcript search, list, and show work without that dependency.</p>
+  </div>
+</section>
+
+<section class="sec" id="limits">
+  <div class="wrap">
+    <div class="h2"><b>What is not verified</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
+    <p class="lead">What has been checked and what has not are written down separately.</p>
+    <div class="limits">
+      <h3>Honest limits</h3>
+      <ul>
+        <li><b>JSONL is an undocumented internal format.</b> Claude Code does not publish its
+          transcript format; this tool matches observed structure, including a raw-byte match for
+          compaction events, so an update can break it. Tests use synthetic fixtures that mirror
+          the observed serialization, so most breakage should show up as a test failure rather than
+          a silent wrong answer, but only for the shapes that are already known.</li>
+        <li><b>Real-data testing is one machine, one person.</b> Developed against one machine's
+          real data (a few hundred MB, Windows, Japanese and English) plus the synthetic suite.
+          Linux and macOS are exercised by CI on the synthetic suite only.</li>
+      </ul>
+    </div>
+    <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
+      <h3>Verified</h3>
+      <ul>
+        <li><b>71 tests</b> cover transcript parsing, every subcommand, the memory graph checks,
+          path auto-detection, and the bundled sample data end-to-end, all green without real data.</li>
+        <li><b>CI is green on both ubuntu and windows</b> (GitHub Actions).</li>
+        <li>Every command runs on the <b>bundled synthetic sample with no real data required</b>:
+          <code>check</code> reports <code>dead=0 orphan=0 missing=0 ghost=0 stale=0</code> on it,
+          demonstrating its own consistency.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="sec alt" style="padding:64px 0">
+  <div class="wrap">
+    <div class="h2"><b>Why "blue strawberry"</b><span class="rule"></span><span class="en">WHY "BLUE STRAWBERRY"</span></div>
+    <p class="lead">"Draw me a blue strawberry." "Strawberries aren't blue, so I can't." That second
+      line is false, and the way it is false matters. The verification was aimed at the wrong
+      proposition, whether blue strawberries exist in nature. The real question was whether the
+      parts already at hand, the shape of a strawberry, the color blue, the ability to draw, could
+      be bundled into something new, and they could. blue-strawberry is the same move: transcripts
+      already stay on disk, Markdown notes can already carry wikilinks, full-text search is old.
+      No new capability was needed, only noticing that the parts could be bundled.</p>
+    <a class="link" href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">
+      <b>Read the full story in the README</b>
+      <span class="note">The full fable, design notes, honest limits</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+    <a class="link" href="https://dev.to/namakoo/the-day-my-agent-started-having-hunches-f7o" target="_blank" rel="noopener" style="margin-top:14px">
+      <b>Read the story on dev.to</b>
+      <span class="note">The Day My Agent Started Having Hunches — measurements, failures and all</span>
+      <span class="rule"></span><span class="arrow">→</span></a>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><b style="color:#fff">blue-strawberry</b> · transcript search, memory graph, verified lineage</span>
+    <span><a href="index.en.html">basrun</a> / <a href="ailine.en.html">ailine</a> / <a href="about.en.html">Developer</a> / <a href="https://github.com/namakoo-dev/blue-strawberry" target="_blank" rel="noopener">GitHub</a></span>
+    <span>The tool and this page were written by AI, and checked by AI.</span>
+    <span class="copy">&copy; 2026 Namakoo</span>
+  </div>
+</footer>
+
+<script src="ripple.js?v=3" defer></script>
+</body>
+</html>
