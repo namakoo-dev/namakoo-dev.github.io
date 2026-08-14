@@ -43,7 +43,7 @@
       <span class="n"><span>AI との作業の記憶を、</span><span>失わないための道具。</span></span>
     </h1>
     <p>長い開発セッションでは、<b>大事な会話ほど圧縮で画面から消えていきます</b>。でも実は、
-       Claude Code は会話の全文をディスクに残しています ― 消えていたのは記録ではなく、
+       Claude Code は会話の全文をディスクに残しています（既定では直近 30 日分・設定で延長可）。消えていたのは記録ではなく、
        <b>思い出す手段</b>でした。blue-strawberry はその手段です。<code>stdlib</code> だけで動く
        1 ファイルの Python CLI が、過去の全セッションを 3 つの動詞で扱えるようにします。</p>
     <ul class="fmt">
@@ -83,8 +83,10 @@
   <div class="wrap">
     <div class="h2"><b>なぜ低負荷で済むのか ― 3 層の思い出し方</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
     <p class="lead">Claude Code は会話をまるごと <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>
-      に残します。コンテキスト圧縮で古いやり取りが表示ウィンドウから落ちたあとも、
-      ディスクの transcript は消えません。ただし毎回全文を読み直すのは高くつくので、
+      に残します。コンテキスト圧縮で古いやり取りが表示ウィンドウから落ちても、ディスクの transcript は
+      残っています。ただし<b>既定では 30 日より古いセッションが起動時に整理されます</b>
+      （<code>settings.json</code> の <code>cleanupPeriodDays</code> を上げれば長期アーカイブにできます ―
+      この道具はアーカイブが長いほど役立ちます）。また毎回全文を読み直すのは高くつくので、
       blue-strawberry は<b>3 層</b>で思い出します。</p>
     <div class="grid">
       <div class="card"><span class="n">01</span><h3>索引 1 行</h3>

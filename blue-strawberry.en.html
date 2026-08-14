@@ -42,7 +42,7 @@
       <span class="n"><span>Stop losing the memory</span> <span>of your work with AI.</span></span>
     </h1>
     <p>In long development sessions, the conversations that matter most are exactly the ones
-       compaction pushes out of the window. But Claude Code keeps the full transcript on disk.
+       compaction pushes out of the window. But Claude Code keeps the full transcript on disk (the last 30 days by default; configurable).
        What was missing was never the record; it was <b>a way to remember</b>. blue-strawberry
        is that way: a single-file Python CLI, <code>stdlib</code> only, that gives you your past
        sessions back through three verbs.</p>
@@ -84,8 +84,10 @@
     <div class="h2"><b>Why recall stays cheap: three layers</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
     <p class="lead">Claude Code persists every conversation to
       <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>. Even after context
-      compaction drops old turns from the visible window, the transcript on disk is untouched.
-      Reading it all back every time would be expensive, so blue-strawberry recalls in
+      compaction drops old turns from the visible window, the transcript stays on disk. One
+      caveat: <b>by default, sessions older than 30 days are cleaned up at startup</b>. Raise
+      <code>cleanupPeriodDays</code> in <code>settings.json</code> for a long archive; this tool
+      is far more useful with one. Reading everything back every time would still be expensive, so blue-strawberry recalls in
       <b>three layers</b>.</p>
     <div class="grid">
       <div class="card"><span class="n">01</span><h3>One index line</h3>
