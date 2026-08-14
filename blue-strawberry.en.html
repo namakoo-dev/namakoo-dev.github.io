@@ -36,19 +36,20 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="en">TRANSCRIPT SEARCH, MEMORY GRAPH, VERIFIED LINEAGE</p>
+    <p class="en">RECALL FOR CLAUDE CODE / SEARCH, CONNECT, TRACE</p>
     <h1>
-      <span class="w"><span>Compaction drops it from the window,</span> <span>but the transcript is still on disk.</span></span>
-      <span class="n"><span>Compaction drops it from the window,</span> <span>but the transcript is still on disk.</span></span>
+      <span class="w"><span>Stop losing the memory</span> <span>of your work with AI.</span></span>
+      <span class="n"><span>Stop losing the memory</span> <span>of your work with AI.</span></span>
     </h1>
-    <p>blue-strawberry is a single-file CLI for <b>searching Claude Code transcripts, a memory
-       graph, and lineage tracing</b>. It runs on <code>stdlib</code> alone, no dependencies.
-       When a conversation falls out of the visible window after context compaction, the
-       transcript on disk is still there.</p>
+    <p>In long development sessions, the conversations that matter most are exactly the ones
+       compaction pushes out of the window. But Claude Code keeps the full transcript on disk.
+       What was missing was never the record; it was <b>a way to remember</b>. blue-strawberry
+       is that way: a single-file Python CLI, <code>stdlib</code> only, that gives you your past
+       sessions back through three verbs.</p>
     <ul class="fmt">
-      <li><b>Search</b><span>list/search/show</span></li>
-      <li><b>Memory</b><span>check/suggest</span></li>
-      <li><b>Lineage</b><span>lineage/backlinks</span></li>
+      <li><b>Search</b><span>full-text across hundreds of MB in 0.1s</span></li>
+      <li><b>Connect</b><span>distill key conclusions into an index you always carry</span></li>
+      <li><b>Trace</b><span>follow "why did we decide this?" back to the actual words</span></li>
     </ul>
     <div class="hero-cta">
       <a class="go" href="#how">See how it works<span aria-hidden="true"> →</span></a>
@@ -61,9 +62,26 @@
   </div>
 </section>
 
-<section class="sec alt" id="how">
+<section class="sec alt" id="moments">
   <div class="wrap">
-    <div class="h2"><b>Three layers, low cost per recall</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
+    <div class="h2"><b>The moments it is for</b><span class="rule"></span><span class="en">THE MOMENTS IT IS FOR</span></div>
+    <div class="grid">
+      <div class="card"><span class="n">&ldquo;</span><h3>Where did we talk about that?</h3>
+        <p>Pull up one remark from weeks ago with a keyword. Full-text search across 170MB
+        of real data runs in <b>0.1 seconds</b>.</p></div>
+      <div class="card"><span class="n">&ldquo;</span><h3>Why did we decide this?</h3>
+        <p>Trace a design decision back to <b>the actual words</b> of the conversation where
+        it was made, before hindsight rewrites it.</p></div>
+      <div class="card"><span class="n">&ldquo;</span><h3>Before compaction eats it</h3>
+        <p>Distill the conclusions that matter into one-line index entries that load every
+        session. Forgetfulness, cancelled by design.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="h2"><b>Why recall stays cheap: three layers</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
     <p class="lead">Claude Code persists every conversation to
       <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>. Even after context
       compaction drops old turns from the visible window, the transcript on disk is untouched.
@@ -82,10 +100,11 @@
   </div>
 </section>
 
-<section class="sec" id="lineage">
+<section class="sec alt" id="lineage">
   <div class="wrap">
     <div class="h2"><b>Where an idea came from, checked by machine</b><span class="rule"></span><span class="en">VERIFIED LINEAGE</span></div>
-    <p class="lead">A <code>系譜:</code> ("lineage") line is a verified, time-ordered anchor.
+    <p class="lead">Memory can be rewritten; human notes and AI summaries both drift. So important claims
+      in a memory note are pinned to <b>the moment they were actually said</b>. A <code>系譜:</code> ("lineage") line is that pin: a verified, time-ordered anchor.
       It carries an 8-character session prefix and a timestamp, and a machine check confirms that
       timestamp actually exists in the target transcript, within a <b>±3 minute window</b>. The
       guardian (<code>check</code>) also inspects dead links, index drift, and stale anchors, every run.</p>
@@ -104,7 +123,7 @@ python recall.py --projects-dir sample/projects lineage node_review --deep</pre>
   </div>
 </section>
 
-<section class="sec alt" id="use">
+<section class="sec" id="use">
   <div class="wrap">
     <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">All it needs is <b>Python 3.9+</b>. No dependencies, no external API calls. A
@@ -125,7 +144,7 @@ python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
   </div>
 </section>
 
-<section class="sec" id="limits">
+<section class="sec alt" id="limits">
   <div class="wrap">
     <div class="h2"><b>What is not verified</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
     <p class="lead">What has been checked and what has not are written down separately.</p>
@@ -156,7 +175,7 @@ python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
   </div>
 </section>
 
-<section class="sec alt" style="padding:64px 0">
+<section class="sec" style="padding:64px 0">
   <div class="wrap">
     <div class="h2"><b>Why "blue strawberry"</b><span class="rule"></span><span class="en">WHY "BLUE STRAWBERRY"</span></div>
     <p class="lead">"Draw me a blue strawberry." "Strawberries aren't blue, so I can't." That second

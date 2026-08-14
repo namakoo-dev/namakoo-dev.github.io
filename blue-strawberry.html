@@ -37,18 +37,19 @@
 
 <section class="hero">
   <div class="wrap">
-    <p class="en">TRANSCRIPT SEARCH, MEMORY GRAPH, VERIFIED LINEAGE</p>
+    <p class="en">RECALL FOR CLAUDE CODE — SEARCH, CONNECT, TRACE</p>
     <h1>
-      <span class="w"><span>要約でウィンドウから消えても、</span><span>transcript はディスクに全部残っている。</span></span>
-      <span class="n"><span>要約でウィンドウから消えても、</span><span>transcript はディスクに全部残っている。</span></span>
+      <span class="w"><span>AI との作業の記憶を、</span><span>失わないための道具。</span></span>
+      <span class="n"><span>AI との作業の記憶を、</span><span>失わないための道具。</span></span>
     </h1>
-    <p>blue-strawberry は、<b>Claude Code の transcript 検索・記憶グラフ・系譜トレース</b>を
-       1 ファイルで行う CLI です。<code>stdlib</code> だけで動き、依存ライブラリはゼロ。
-       コンテキスト圧縮で会話がウィンドウから消えたあとも、ディスクの transcript は消えていません。</p>
+    <p>長い開発セッションでは、<b>大事な会話ほど圧縮で画面から消えていきます</b>。でも実は、
+       Claude Code は会話の全文をディスクに残しています ― 消えていたのは記録ではなく、
+       <b>思い出す手段</b>でした。blue-strawberry はその手段です。<code>stdlib</code> だけで動く
+       1 ファイルの Python CLI が、過去の全セッションを 3 つの動詞で扱えるようにします。</p>
     <ul class="fmt">
-      <li><b>検索</b><span>list/search/show</span></li>
-      <li><b>記憶</b><span>check/suggest</span></li>
-      <li><b>系譜</b><span>lineage/backlinks</span></li>
+      <li><b>探す</b><span>数百 MB の過去ログを 0.1 秒で全文検索</span></li>
+      <li><b>繋ぐ</b><span>大事な結論を 1 行に蒸留し、索引と網で持ち歩く</span></li>
+      <li><b>辿る</b><span>「なぜこう決めた？」を当時の発言まで遡る</span></li>
     </ul>
     <div class="hero-cta">
       <a class="go" href="#how">仕組みを見る<span aria-hidden="true"> →</span></a>
@@ -61,9 +62,26 @@
   </div>
 </section>
 
-<section class="sec alt" id="how">
+<section class="sec alt" id="moments">
   <div class="wrap">
-    <div class="h2"><b>3 層で、低負荷に思い出す</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
+    <div class="h2"><b>こういう瞬間のための道具です</b><span class="rule"></span><span class="en">THE MOMENTS IT IS FOR</span></div>
+    <div class="grid">
+      <div class="card"><span class="n">「</span><h3>あの話、どこでしたっけ</h3>
+        <p>何週間も前のセッションの一言を、キーワードだけで引き当てる。実データ 170MB を
+        <b>0.1 秒</b>で横断検索できます。</p></div>
+      <div class="card"><span class="n">「</span><h3>なぜこう決めたんだっけ</h3>
+        <p>設計判断の由来を、当時の会話の<b>実際の発言</b>まで遡って確かめる。
+        記憶違いや後付けの理屈で上書きされる前に。</p></div>
+      <div class="card"><span class="n">「</span><h3>圧縮で消える前に</h3>
+        <p>大事な結論は 1 行の索引に蒸留して、毎セッション自動で手元に。
+        AI の「忘れっぽさ」を、仕組みで打ち消します。</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="h2"><b>なぜ低負荷で済むのか ― 3 層の思い出し方</b><span class="rule"></span><span class="en">THREE LAYERS, ONE RECALL</span></div>
     <p class="lead">Claude Code は会話をまるごと <code>~/.claude/projects/&lt;project&gt;/&lt;session-id&gt;.jsonl</code>
       に残します。コンテキスト圧縮で古いやり取りが表示ウィンドウから落ちたあとも、
       ディスクの transcript は消えません。ただし毎回全文を読み直すのは高くつくので、
@@ -81,10 +99,11 @@
   </div>
 </section>
 
-<section class="sec" id="lineage">
+<section class="sec alt" id="lineage">
   <div class="wrap">
     <div class="h2"><b>考えの由来を、機械で確かめる</b><span class="rule"></span><span class="en">VERIFIED LINEAGE</span></div>
-    <p class="lead"><code>系譜:</code> 行は、検証済みの時系列アンカーです。8 桁のセッション prefix と
+    <p class="lead">記憶は書き換えられます ― 人のノートも、AI の要約も。だから blue-strawberry の記憶ノートは、
+      重要な主張の由来を<b>当時の会話の瞬間</b>に釘で留めます。<code>系譜:</code> 行は、その検証済みの時系列アンカーです。8 桁のセッション prefix と
       時刻を持ち、対象の transcript にその時刻が実在するかを<b>±3 分の窓</b>で機械が検査します。
       番人(<code>check</code>)はこれに加えて、dead link・索引ずれ・アンカーの陳腐化も毎回検査します。</p>
 <pre><span class="c"># 番人。同梱のサンプルデータで今すぐ試せる</span>
@@ -102,7 +121,7 @@ python recall.py --projects-dir sample/projects lineage node_review --deep</pre>
   </div>
 </section>
 
-<section class="sec alt" id="use">
+<section class="sec" id="use">
   <div class="wrap">
     <div class="h2"><b>使ってみる</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">必要なのは <b>Python 3.9+</b> だけです。依存ライブラリはゼロ、外部 API も
@@ -123,7 +142,7 @@ python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
   </div>
 </section>
 
-<section class="sec" id="limits">
+<section class="sec alt" id="limits">
   <div class="wrap">
     <div class="h2"><b>確認していないこと</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
     <p class="lead">確かめた範囲と、確かめていない範囲を分けて書きます。</p>
@@ -152,7 +171,7 @@ python recall.py --projects-dir sample/projects show a1b2c3d4</pre>
   </div>
 </section>
 
-<section class="sec alt" style="padding:64px 0">
+<section class="sec" style="padding:64px 0">
   <div class="wrap">
     <div class="h2"><b>名前の由来</b><span class="rule"></span><span class="en">WHY "BLUE STRAWBERRY"</span></div>
     <p class="lead">「青いイチゴを描いて」「イチゴは青くないので描けません」。この二行目は誤りで、
