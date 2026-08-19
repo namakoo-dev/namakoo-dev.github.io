@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" hreflang="ja" href="https://namakoo-dev.github.io/ailine.html">
 <link rel="alternate" hreflang="en" href="https://namakoo-dev.github.io/ailine.en.html">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -77,8 +77,9 @@
     <div class="grid">
       <div class="card"><span class="n">01</span><h3>自然言語で頼む</h3>
         <p>「金額で降順に並べ替えて」。ローカルの AI が LibreOffice のコードに翻訳します。</p></div>
-      <div class="card"><span class="n">02</span><h3>コピーに適用</h3>
-        <p>原本は触らず、コピーへ適用。壊しません。形式は <code>.xlsx</code> のままです。</p></div>
+      <div class="card"><span class="n">02</span><h3>守りながら適用</h3>
+        <p>自動バックアップと <code>undo</code> つきで原本に反映（<code>--copy</code> でコピーにも）。
+           既存データを上書きする操作は、反映の<b>前に確認</b>を挟みます。形式は <code>.xlsx</code> のままです。</p></div>
       <div class="card"><span class="n">03</span><h3>効果を検証</h3>
         <p>読み戻して差分を確認。変化ゼロなら書き直し。★ 走った ≠ できた を機械で防ぎます。</p></div>
     </div>
@@ -114,7 +115,7 @@
     <div class="h2"><b>使い方</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">必要なのは <b>ローカルの LLM（ollama）と LibreOffice</b> だけです。
       Microsoft Office も、クラウド API も要りません。モデルは差し替えられます。</p>
-<pre><span class="c"># 自然言語 → 生成 → コピーに適用 → 効果を検証 → 差分を表示</span>
+<pre><span class="c"># 自然言語 → 生成 → 適用（バックアップ+undo つき） → 効果を検証 → 差分を表示</span>
 python ailine.py run 見積.xlsx "各行の金額に 単価 × 数量 を入れて"
 
 <span class="c"># 適用せず、生成した内容を見るだけ（レビュー用）</span>
@@ -138,7 +139,8 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
       <ul>
         <li><b>ローカルの LLM と LibreOffice が要ります。</b>外部にデータは送りませんが、そのぶん手元の環境に依存します。</li>
         <li><b>珍しい操作は、小さいモデルほど外します。</b>検証済みのヘルパで補いますが、載っていない操作は当たり率が落ちます。</li>
-        <li><b>検証は「変化したこと」までを保証します。</b>「<b>正しいか</b>」は保証しません ― 出力の差分を人が見て判断します。道具も、必ずそう促します。</li>
+        <li><b>検証が保証するのは「宣言どおりに変わったこと」まで</b>です。業務として<b>正しいか</b>は保証しません ― 出力の差分を人が見て判断します。道具も、必ずそう促します。</li>
+        <li><b>頼める操作の一覧に無い依頼は、AI の直接生成に落ちます。</b>その場合は「機械保証なし」と明示し、✓ は出しません。</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
@@ -147,8 +149,14 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>並べ替え・グラフ・集計表・ピボット・VLOOKUP・条件付き色・罫線・結合・中央揃え・太字</b>が、自然言語から動くこと ― 値だけでなく<b>描画して見た目も</b>確認しました。</li>
         <li><b>太字は native で書き出せます</b>（日本語は <code>CharWeightAsian</code> が要る点を実測で押さえました）。数値も壊れません。</li>
         <li><b>実務的な通し試験</b>（1 つの表に 8 操作を連続適用）が、値の検算と描画の両方で破綻しないこと。</li>
-        <li>原本は触らず<b>コピーに適用</b>すること。処理後も、通常の <code>.xlsx</code> であること。</li>
-        <li>テストは緑（純ロジック 20 件）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
+        <li><b>書いた結果を機械で疑う</b>こと ― 操作ごとの事後条件（どの行を検証したかまで言う）、
+           既にある合計への<b>二重計上に ✓ を出さない</b>算術の検算、同じ依頼を 2 回実行しても
+           <b>同一の列を黙って重複させない</b>こと。すべて自動テストで凍結しています。</li>
+        <li><b>危ない瞬間に止まる</b>こと ― 既存データへの上書き・意図しないシートの置き換えは
+           確認を挟み、保存で図形などが失われる場合は<b>申告して止まり</b>、原本は無傷のままであること。</li>
+        <li><b>表題行が上にある表</b>でも見出し行を推定して動くこと（自信が無いときは推定せず聞き返します）。</li>
+        <li>適用後も、通常の <code>.xlsx</code> であること。<code>undo</code> で 1 段階ずつ戻せること。</li>
+        <li>テストは <b>1,197 本</b>が緑（GitHub Actions の CI が毎 push 検査）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
       </ul>
     </div>
   </div>

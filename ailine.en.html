@@ -16,7 +16,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="alternate" hreflang="ja" href="https://namakoo-dev.github.io/ailine.html">
 <link rel="alternate" hreflang="en" href="https://namakoo-dev.github.io/ailine.en.html">
-<link rel="stylesheet" href="style.css?v=14">
+<link rel="stylesheet" href="style.css?v=15">
 </head>
 <body>
 
@@ -76,8 +76,10 @@
     <div class="grid">
       <div class="card"><span class="n">01</span><h3>Ask in plain language</h3>
         <p>“Sort by amount, descending.” The local AI translates it into LibreOffice code.</p></div>
-      <div class="card"><span class="n">02</span><h3>Apply to a copy</h3>
-        <p>The original is untouched; a copy is edited. The format stays <code>.xlsx</code>.</p></div>
+      <div class="card"><span class="n">02</span><h3>Apply, guarded</h3>
+        <p>Changes go to the original with an automatic backup and <code>undo</code>
+           (<code>--copy</code> edits a copy instead). Anything that would overwrite existing data
+           asks <b>before</b> it is applied. The format stays <code>.xlsx</code>.</p></div>
       <div class="card"><span class="n">03</span><h3>Verify the effect</h3>
         <p>Read back and diff. If nothing changed, rewrite. Ran is not done, caught by machine.</p></div>
     </div>
@@ -114,7 +116,7 @@
     <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">All you need is a <b>local LLM (ollama) and LibreOffice</b>.
       No Microsoft Office, no cloud API. The model is swappable.</p>
-<pre><span class="c"># natural language, generate, apply to a copy, verify the effect, show the diff</span>
+<pre><span class="c"># natural language, generate, apply (backup + undo), verify the effect, show the diff</span>
 python ailine.py run quote.xlsx "put amount = unit price x quantity in each row"
 
 <span class="c"># generate and show only, without applying (for review)</span>
@@ -138,7 +140,8 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
       <ul>
         <li><b>A local LLM and LibreOffice are required.</b> No data is sent out, but in exchange it depends on your own machine.</li>
         <li><b>Rare operations are missed more by smaller models.</b> Verified helpers cover them, but anything not covered has a lower hit rate.</li>
-        <li><b>Verification guarantees that something changed.</b> It does not guarantee it is <b>correct</b>: the output diff is judged by a human, and the tool always prompts for that.</li>
+        <li><b>Verification guarantees that things changed as declared.</b> It does not guarantee the result is <b>correct for your business</b>: the output diff is judged by a human, and the tool always prompts for that.</li>
+        <li><b>Requests outside the documented operation list fall back to direct AI generation.</b> That path is labeled "no machine guarantee" and never shows the ✓.</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
@@ -147,8 +150,17 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>Sorting, charts, summary tables, pivots, VLOOKUP, conditional color, borders, merges, centering, bold</b> work from natural language, confirmed not just by values but <b>by rendering and looking</b>.</li>
         <li><b>Bold is written natively</b> (Japanese bold needs <code>CharWeightAsian</code>, pinned down by measurement). Numbers are not corrupted.</li>
         <li>A <b>realistic end-to-end run</b> (eight operations applied in a row to one table) holds up under both value checks and rendering.</li>
-        <li>The original is untouched; a <b>copy is edited</b>. After processing it is an ordinary <code>.xlsx</code>.</li>
-        <li>Tests are green (20 pure-logic). This page too was rendered at different widths to check layout and wrapping.</li>
+        <li><b>It doubts its own output, mechanically</b> — per-operation postconditions that state
+           which row was verified, an arithmetic check that refuses the ✓ when a total would be
+           <b>double-counted</b>, and a guard so that running the same request twice never
+           silently duplicates an identical column. All frozen as automated tests.</li>
+        <li><b>It stops at the dangerous moments</b> — overwriting existing data or replacing an
+           unrelated sheet asks first; if saving would lose shapes or drawings it <b>says so and
+           stops</b>, leaving the original untouched.</li>
+        <li>Tables with <b>title rows above the header</b> work: the header row is inferred, and
+           when confidence is low it asks instead of guessing.</li>
+        <li>After processing it is an ordinary <code>.xlsx</code>, and <code>undo</code> steps back one change at a time.</li>
+        <li><b>1,197 tests</b> are green, checked by GitHub Actions CI on every push. This page too was rendered at different widths to check layout and wrapping.</li>
       </ul>
     </div>
   </div>
