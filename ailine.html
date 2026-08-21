@@ -25,6 +25,7 @@
     <span class="brand">ailine<small>AI-DRIVEN DOC AUTOMATION</small></span>
     <a href="#how">仕組み</a>
     <a href="#demo">デモ</a>
+    <a href="#multifile">フォルダ</a>
     <a href="#limits">確認していないこと</a>
     <a class="pg" href="index.html">basrun</a>
     <a class="pg" href="blue-strawberry.html">blue-strawberry</a>
@@ -110,7 +111,45 @@
   </div>
 </section>
 
-<section class="sec alt" id="use">
+
+<section class="sec alt" id="multifile">
+  <div class="wrap">
+    <div class="h2"><b>フォルダごと、まとめて疑う</b><span class="rule"></span><span class="en">A WHOLE FOLDER, VERIFIED</span></div>
+    <p class="lead">請求書が 40 冊。条件に合う行だけを 1 冊に集めたい ― <b>一言で</b>頼めます。
+      原本は<b>読むだけ</b>（1 バイトも変えません）。読めなかった冊・怪しい値は、
+      黙らず<b>名指し</b>で返します。下はすべて実際の実行そのまま（データは架空のサンプルです）。</p>
+    <pre>&gt; python ailine.py run 請求書2026-07 "金額が40000以上の行を抜き出して"
+
+■ ailine run（フォルダ抽出）  folder=C:\Demo\請求書2026-07
+出力先: C:\Demo\請求書2026-07_金額40000以上.xlsx
+条件: 金額 40000 以上
+40 ファイル中 38 照合 → 38 中 32 ファイルで計 60 行一致
+  ⚠ 請求書_007.xlsx: 取れなかった（欠け: 金額）── 中身の検査は未実施
+  ⚠ 請求書_031.xls: 取れなかった（旧形式(.xls)）── 中身の検査は未実施
+  並べ替えて照合: 4 冊（内訳は --json）
+  合計行 76 行を 38 冊で除外（内訳は --json）
+  ⚠ 請求書_023.xlsx: 合計行(8行目) の値 140100 ≠ 明細の和 138600
+  行の完全会計: 38 冊すべてで成立（データ行 = 一致 + 不一致 + 合計行の除外・内訳は --json）
+出力データ行数: 60
+Σ金額: 元 4701000 / 出力 4701000</pre>
+    <p class="cap" style="text-align:left">40 冊のうち、読めない 2 冊は<b>名指しと理由</b>。23 冊目は<b>合計行の値が明細の和と合わない</b>ことを、両側の数字つきで指摘 ― 人が見落としていた帳簿のミスを、道具が拾った瞬間です。</p>
+    <figure class="mat"><img src="assets/ailine-mf-band.jpg" alt="縦積みされた出力ブック。怪しいファイル由来の行だけが薄赤の帯でハイライトされている"></figure>
+    <p class="cap">出力ブックでは、怪しい冊由来の行だけが<b>薄赤の帯</b>。右端の<b>出所列</b>（元ファイル・元行）で、どの行も 1 クリックで出どころを辿れます</p>
+    <figure class="mat"><img src="assets/ailine-mf-findings.jpg" alt="出力ブックに同梱される検分シートの所見。どのファイルのどのシートのどのセルかと両側の数字、元セルへ飛ぶリンクが並ぶ"></figure>
+    <p class="cap">出力の 2 枚目に<b>検分シート</b>を同梱 ― 所見は「どのファイルの・どのシートの・どのセルか」まで書き、<b>クリックで元のセルに直接飛べます</b>。このブックを渡せば、検算の記録ごと相手に渡ります</p>
+    <p class="lead" style="margin-top:34px">納品した後、誰かがファイルを手で直したら？ ― <b>検算だけを単独で再実行</b>できます。</p>
+    <pre>&gt; python ailine.py verify 請求書2026-07_金額40000以上.xlsx 請求書2026-07
+
+■ ailine verify  out=C:\Demo\請求書2026-07_金額40000以上.xlsx  folder=C:\Demo\請求書2026-07
+行数: 元 60 / 出力 60
+Σ金額: 元 4701000 / 出力 4624000
+⚠ 金額 の合計が一致しません: 元 4701000 / 出力 4624000
+⚠ 帰属が一致しません: 請求書_002.xlsx の 4行目 列『金額』 元 120000 / 出力 43000</pre>
+    <p class="cap" style="text-align:left">あとから編集された 1 セルを、<b>どの冊の何行目の列がいくつ→いくつ</b>まで名指しで特定（終了コードでも機械に伝わります）。信じる対象が、道具から<b>検算</b>に移ります</p>
+  </div>
+</section>
+
+<section class="sec" id="use">
   <div class="wrap">
     <div class="h2"><b>使い方</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">必要なのは <b>ローカルの LLM（ollama）と LibreOffice</b> だけです。
@@ -129,7 +168,7 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
   </div>
 </section>
 
-<section class="sec" id="limits">
+<section class="sec alt" id="limits">
   <div class="wrap">
     <div class="h2"><b>確認していないこと</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
     <p class="lead">確かめた範囲と、確かめていない範囲を分けて書きます。
@@ -141,6 +180,7 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>珍しい操作は、小さいモデルほど外します。</b>検証済みのヘルパで補いますが、載っていない操作は当たり率が落ちます。</li>
         <li><b>検証が保証するのは「宣言どおりに変わったこと」まで</b>です。業務として<b>正しいか</b>は保証しません ― 出力の差分を人が見て判断します。道具も、必ずそう促します。</li>
         <li><b>頼める操作の一覧に無い依頼は、AI の直接生成に落ちます。</b>その場合は「機械保証なし」と明示し、✓ は出しません。</li>
+        <li><b>フォルダ操作は今は「条件抽出・縦積み・棚卸し・検算」だけ</b>です。対象はフォルダ直下の .xlsx（.xls は名指しで断ります・サブフォルダは見ません）。列名は基準の冊と一致するものだけを積み、ゆるい寄せはしません。</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
@@ -149,6 +189,7 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>並べ替え・グラフ・集計表・ピボット・VLOOKUP・条件付き色・罫線・結合・中央揃え・太字</b>が、自然言語から動くこと ― 値だけでなく<b>描画して見た目も</b>確認しました。</li>
         <li><b>太字は native で書き出せます</b>（日本語は <code>CharWeightAsian</code> が要る点を実測で押さえました）。数値も壊れません。</li>
         <li><b>実務的な通し試験</b>（1 つの表に 8 操作を連続適用）が、値の検算と描画の両方で破綻しないこと。</li>
+        <li><b>フォルダ 40 冊の通し実弾</b> ― 読めない冊の名指し・合計行の自動除外と両側の数字・行の完全会計（データ行 = 一致 + 不一致 + 除外）・出所列・検分シート・あとから編集された 1 セルの行水準の特定。ここに載せた出力はその実行そのままです。</li>
         <li><b>書いた結果を機械で疑う</b>こと ― 操作ごとの事後条件（どの行を検証したかまで言う）、
            既にある合計への<b>二重計上に ✓ を出さない</b>算術の検算、同じ依頼を 2 回実行しても
            <b>同一の列を黙って重複させない</b>こと。すべて自動テストで凍結しています。</li>
@@ -156,13 +197,13 @@ python ailine.py run 見積.xlsx "..." --model qwen2.5-coder:32b</pre>
            確認を挟み、保存で図形などが失われる場合は<b>申告して止まり</b>、原本は無傷のままであること。</li>
         <li><b>表題行が上にある表</b>でも見出し行を推定して動くこと（自信が無いときは推定せず聞き返します）。</li>
         <li>適用後も、通常の <code>.xlsx</code> であること。<code>undo</code> で 1 段階ずつ戻せること。</li>
-        <li>テストは <b>1,197 本</b>が緑（GitHub Actions の CI が毎 push 検査）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
+        <li>テストは <b>1,406 本</b>が緑（GitHub Actions の CI が毎 push 検査）。このページも幅を変えて描画し、崩れと折り返しを確認しています。</li>
       </ul>
     </div>
   </div>
 </section>
 
-<section class="sec alt" id="vs">
+<section class="sec" id="vs">
   <div class="wrap">
     <div class="h2"><b>Microsoft 365 Copilot との違い</b><span class="rule"></span><span class="en">A DIFFERENT FIELD</span></div>
     <!-- ★ 「MS Office からの逃げ」に読ませない骨格: 冒頭で Copilot を正面から認める →

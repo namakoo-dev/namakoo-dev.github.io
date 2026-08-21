@@ -25,6 +25,7 @@
     <span class="brand">ailine<small>AI-DRIVEN DOC AUTOMATION</small></span>
     <a href="#how">How</a>
     <a href="#demo">Demo</a>
+    <a href="#multifile">Folders</a>
     <a href="#limits">Not verified</a>
     <a class="pg" href="index.en.html">basrun</a>
     <a class="pg" href="blue-strawberry.en.html">blue-strawberry</a>
@@ -111,7 +112,52 @@
   </div>
 </section>
 
-<section class="sec alt" id="use">
+
+<section class="sec alt" id="multifile">
+  <div class="wrap">
+    <div class="h2"><b>A whole folder, verified</b><span class="rule"></span><span class="en">フォルダごと、まとめて疑う</span></div>
+    <p class="lead">Forty invoice files. You want just the rows that match a condition, collected into one book ―
+      <b>one sentence</b> does it. Originals are <b>read-only</b> (not a single byte changes). Files it could not read
+      and values that look wrong are <b>called out by name</b>, never silently skipped. Everything below is the actual
+      run, unedited (all data is fictional sample data; the tool's output is in Japanese).</p>
+    <pre>&gt; python ailine.py run 請求書2026-07 "金額が40000以上の行を抜き出して"
+
+■ ailine run（フォルダ抽出）  folder=C:\Demo\請求書2026-07
+出力先: C:\Demo\請求書2026-07_金額40000以上.xlsx
+条件: 金額 40000 以上
+40 ファイル中 38 照合 → 38 中 32 ファイルで計 60 行一致
+  ⚠ 請求書_007.xlsx: 取れなかった（欠け: 金額）── 中身の検査は未実施
+  ⚠ 請求書_031.xls: 取れなかった（旧形式(.xls)）── 中身の検査は未実施
+  並べ替えて照合: 4 冊（内訳は --json）
+  合計行 76 行を 38 冊で除外（内訳は --json）
+  ⚠ 請求書_023.xlsx: 合計行(8行目) の値 140100 ≠ 明細の和 138600
+  行の完全会計: 38 冊すべてで成立（データ行 = 一致 + 不一致 + 合計行の除外・内訳は --json）
+出力データ行数: 60
+Σ金額: 元 4701000 / 出力 4701000</pre>
+    <p class="cap" style="text-align:left">Out of 40 files: 2 unreadable ones are <b>named, with reasons</b>. In file #23 the
+      <b>total row does not match the sum of its line items</b> ― shown with both numbers. A bookkeeping mistake a human had
+      missed, caught by the tool.</p>
+    <figure class="mat"><img src="assets/ailine-mf-band.jpg" alt="The stacked output book. Only rows that came from a suspicious file are highlighted with a light red band"></figure>
+    <p class="cap">In the output book, rows from the suspicious file get a <b>light red band</b>. The rightmost
+      <b>provenance columns</b> (source file, source row) let you audit any row back to its origin</p>
+    <figure class="mat"><img src="assets/ailine-mf-findings.jpg" alt="The inspection sheet bundled in the output book: each finding names the file, sheet and cell, shows both numbers, and links directly to the source cell"></figure>
+    <p class="cap">A bundled <b>inspection sheet</b> lists every finding down to <b>which file, which sheet, which cell</b> ―
+      with clickable links straight to the source cell. Hand this book over, and the verification record travels with it</p>
+    <p class="lead" style="margin-top:34px">And if someone hand-edits the file after delivery? ―
+      <b>re-run just the verification</b>, standalone.</p>
+    <pre>&gt; python ailine.py verify 請求書2026-07_金額40000以上.xlsx 請求書2026-07
+
+■ ailine verify  out=C:\Demo\請求書2026-07_金額40000以上.xlsx  folder=C:\Demo\請求書2026-07
+行数: 元 60 / 出力 60
+Σ金額: 元 4701000 / 出力 4624000
+⚠ 金額 の合計が一致しません: 元 4701000 / 出力 4624000
+⚠ 帰属が一致しません: 請求書_002.xlsx の 4行目 列『金額』 元 120000 / 出力 43000</pre>
+    <p class="cap" style="text-align:left">A single edited cell is pinned down to <b>which file, which row, which column,
+      and both values</b> (the exit code tells machines, too). What you trust shifts from the tool to the <b>verification</b></p>
+  </div>
+</section>
+
+<section class="sec" id="use">
   <div class="wrap">
     <div class="h2"><b>Getting started</b><span class="rule"></span><span class="en">GETTING STARTED</span></div>
     <p class="lead">All you need is a <b>local LLM (ollama) and LibreOffice</b>.
@@ -130,7 +176,7 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
   </div>
 </section>
 
-<section class="sec" id="limits">
+<section class="sec alt" id="limits">
   <div class="wrap">
     <div class="h2"><b>What is not verified</b><span class="rule"></span><span class="en">WHAT IS NOT VERIFIED</span></div>
     <p class="lead">I write down what I've checked and what I haven't, separately.
@@ -142,6 +188,7 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>Rare operations are missed more by smaller models.</b> Verified helpers cover them, but anything not covered has a lower hit rate.</li>
         <li><b>Verification guarantees that things changed as declared.</b> It does not guarantee the result is <b>correct for your business</b>: the output diff is judged by a human, and the tool always prompts for that.</li>
         <li><b>Requests outside the documented operation list fall back to direct AI generation.</b> That path is labeled "no machine guarantee" and never shows the ✓.</li>
+        <li><b>Folder operations are currently limited to: conditional extract, stacking, inventory scan, and verification.</b> Scope is .xlsx files directly inside the folder (.xls is refused by name; subfolders are not read). Only columns matching the base file are stacked ― no fuzzy matching.</li>
       </ul>
     </div>
     <div class="limits" style="margin-top:24px;border-left-color:#8fa3bd">
@@ -150,6 +197,7 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li><b>Sorting, charts, summary tables, pivots, VLOOKUP, conditional color, borders, merges, centering, bold</b> work from natural language, confirmed not just by values but <b>by rendering and looking</b>.</li>
         <li><b>Bold is written natively</b> (Japanese bold needs <code>CharWeightAsian</code>, pinned down by measurement). Numbers are not corrupted.</li>
         <li>A <b>realistic end-to-end run</b> (eight operations applied in a row to one table) holds up under both value checks and rendering.</li>
+        <li><b>A live 40-file folder run</b> ― unreadable files named with reasons, total rows auto-excluded with both-side numbers, full row accounting (data rows = matched + unmatched + excluded), provenance columns, the bundled inspection sheet, and row-level pinpointing of a post-delivery hand edit. The output shown on this page is that exact run.</li>
         <li><b>It doubts its own output, mechanically</b> — per-operation postconditions that state
            which row was verified, an arithmetic check that refuses the ✓ when a total would be
            <b>double-counted</b>, and a guard so that running the same request twice never
@@ -160,13 +208,13 @@ python ailine.py run quote.xlsx "..." --model qwen2.5-coder:32b</pre>
         <li>Tables with <b>title rows above the header</b> work: the header row is inferred, and
            when confidence is low it asks instead of guessing.</li>
         <li>After processing it is an ordinary <code>.xlsx</code>, and <code>undo</code> steps back one change at a time.</li>
-        <li><b>1,197 tests</b> are green, checked by GitHub Actions CI on every push. This page too was rendered at different widths to check layout and wrapping.</li>
+        <li><b>1,406 tests</b> are green, checked by GitHub Actions CI on every push. This page too was rendered at different widths to check layout and wrapping.</li>
       </ul>
     </div>
   </div>
 </section>
 
-<section class="sec alt" id="vs">
+<section class="sec" id="vs">
   <div class="wrap">
     <div class="h2"><b>How this differs from Microsoft 365 Copilot</b><span class="rule"></span><span class="en">A DIFFERENT FIELD</span></div>
     <p class="lead">Excel in 2026 ships with Copilot Agent Mode. If you have Microsoft 365, a Copilot
