@@ -120,6 +120,8 @@
       <b>one sentence</b> does it. Originals are <b>read-only</b> (not a single byte changes). Files it could not read
       and values that look wrong are <b>called out by name</b>, never silently skipped. Everything below is the actual
       run, unedited (all data is fictional sample data; the tool's output is in Japanese).</p>
+    <figure class="mat"><img src="assets/ailine-mf-folder.jpg" alt="An Explorer window showing the invoice folder: numbered Excel files from 請求書_001.xlsx onward"></figure>
+    <p class="cap">A familiar sight ― a folder of invoices. Instead of opening them one by one, you ask about the whole folder</p>
     <pre>&gt; python ailine.py run 請求書2026-07 "金額が40000以上の行を抜き出して"
 
 ■ ailine run（フォルダ抽出）  folder=C:\Demo\請求書2026-07
@@ -137,9 +139,10 @@
     <p class="cap" style="text-align:left">Out of 40 files: 2 unreadable ones are <b>named, with reasons</b>. In file #23 the
       <b>total row does not match the sum of its line items</b> ― shown with both numbers. A bookkeeping mistake a human had
       missed, caught by the tool.</p>
-    <figure class="mat"><img src="assets/ailine-mf-band.jpg" alt="The stacked output book. Only rows that came from a suspicious file are highlighted with a light red band"></figure>
-    <p class="cap">In the output book, rows from the suspicious file get a <b>light red band</b>. The rightmost
-      <b>provenance columns</b> (source file, source row) let you audit any row back to its origin</p>
+    <figure class="mat"><img src="assets/ailine-mf-calc.jpg" alt="The output book opened in LibreOffice Calc: rows from the suspicious file highlighted in light red, with the inspection sheet visible as a tab at the bottom"></figure>
+    <p class="cap">The output book, opened in LibreOffice. Rows from the suspicious file are <b>light red</b>; the rightmost
+      <b>provenance columns</b> (source file, source row) let you audit any row back to its origin ― and the bundled
+      <b>inspection sheet</b> is right there as a tab at the bottom</p>
     <figure class="mat"><img src="assets/ailine-mf-findings.jpg" alt="The inspection sheet bundled in the output book: each finding names the file, sheet and cell, shows both numbers, and links directly to the source cell"></figure>
     <p class="cap">A bundled <b>inspection sheet</b> lists every finding down to <b>which file, which sheet, which cell</b> ―
       with clickable links straight to the source cell. Hand this book over, and the verification record travels with it</p>
